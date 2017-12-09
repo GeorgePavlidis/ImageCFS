@@ -1,7 +1,7 @@
 package uom.gr.imagecfs;
 
+import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,18 +29,18 @@ import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
-import com.google.api.services.vision.v1.model.FaceAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
-import com.google.api.services.vision.v1.model.SafeSearchAnnotation;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import uom.gr.imagecfs.data.imageDbHelper;
+import uom.gr.imagecfs.data.ImageDbHelper;
+import uom.gr.imagecfs.data.ImageEntry;
 
 
 public class StartActivity extends AppCompatActivity {
@@ -50,8 +50,8 @@ public class StartActivity extends AppCompatActivity {
     private static final String CLOUD_VISION_API_KEY = "AIzaSyCRZqKBmSkyl_sGNQh2eM6uLX1ISVmyov0";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-
     private static final String TAG = MainActivity.class.getSimpleName();
+
 
     FloatingActionButton fab_FromGallery;
     FloatingActionButton fab_FromCamera;
@@ -66,7 +66,9 @@ public class StartActivity extends AppCompatActivity {
     TextView text;
     Boolean flag;
     Boolean isOpen = false;
+
     private Uri imageUri;
+    private  Uri oldUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,10 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 fabAction(isOpen);
+                Uri lol = ImageEntry.ImageTable.buildTableUri(5);
+                Uri lol1 = ImageEntry.LabelTable.buildTableUri(5);
+                Uri lol2 = ImageEntry.TextTable.buildTableUri(5);
+                Log.e("Uri test",lol.toString()+lol1.toString()+lol2.toString());
             }
         });
 
@@ -160,7 +166,8 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        Log.e("WeatherJconParser", String.valueOf(resultCode == RESULT_OK));
+        Log.e("WeatherJsonParser", String.valueOf(resultCode == RESULT_OK));
+
 
         if (resultCode == RESULT_OK) {
             imageUri = data.getData();
@@ -189,7 +196,7 @@ public class StartActivity extends AppCompatActivity {
 
 
         // Do the real work in an async task, because we need to use the network anyway
-        new  AsyncTask<Object, Void, String>() {
+         new AsyncTask<Object, Void, String>() {
             @Override
             protected String doInBackground(Object... params) {
                 try {
@@ -239,36 +246,47 @@ public class StartActivity extends AppCompatActivity {
                         annotateImageRequest.setImage(base64EncodedImage);
 
                         // add the features we want
-                        annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
-                            Feature feature = new Feature();
-                            feature.setType("LABEL_DETECTION");
-                            feature.setMaxResults(10);
-                            add(feature);
-                        }{
-                            Feature feature = new Feature();
-                            feature.setType("FACE_DETECTION");
-                            feature.setMaxResults(10);
-                            add(feature);
-                        }{
-                            Feature feature = new Feature();
-                            feature.setType("LOGO_DETECTION");
-                            feature.setMaxResults(10);
-                            add(feature);
-                        }{
-                            Feature feature = new Feature();
-                            feature.setType("TEXT_DETECTION");
-                            add(feature);
-                        }{
-                            Feature feature = new Feature();
-                            feature.setType("SAFE_SEARCH_DETECTION");
-                            feature.setMaxResults(10);
-                            add(feature);
-                        }{
-                            Feature feature = new Feature();
-                            feature.setType("WEB_DETECTION");
-                            feature.setMaxResults(10);
-                            add(feature);
-                        }
+                        annotateImageRequest.setFeatures(new ArrayList<Feature>() {
+                            {
+                                Feature feature = new Feature();
+                                feature.setType("LABEL_DETECTION");
+                                feature.setMaxResults(10);
+                                add(feature);
+                            }
+
+                            {
+                                Feature feature = new Feature();
+                                feature.setType("FACE_DETECTION");
+                                feature.setMaxResults(10);
+                                add(feature);
+                            }
+
+                            {
+                                Feature feature = new Feature();
+                                feature.setType("LOGO_DETECTION");
+                                feature.setMaxResults(10);
+                                add(feature);
+                            }
+
+                            {
+                                Feature feature = new Feature();
+                                feature.setType("TEXT_DETECTION");
+                                add(feature);
+                            }
+
+                            {
+                                Feature feature = new Feature();
+                                feature.setType("SAFE_SEARCH_DETECTION");
+                                feature.setMaxResults(10);
+                                add(feature);
+                            }
+
+                            {
+                                Feature feature = new Feature();
+                                feature.setType("WEB_DETECTION");
+                                feature.setMaxResults(10);
+                                add(feature);
+                            }
 
                         });
 
@@ -284,7 +302,7 @@ public class StartActivity extends AppCompatActivity {
                     Log.d(TAG, "created Cloud Vision request object, sending request");
 
                     BatchAnnotateImagesResponse response = annotateRequest.execute();
-                    return convertResponseToString(response);
+                    return insertResponseToDb(response);
 
                 } catch (GoogleJsonResponseException e) {
                     Log.d(TAG, "failed to make API request because " + e.getContent());
@@ -297,7 +315,7 @@ public class StartActivity extends AppCompatActivity {
                 return "Cloud Vision API request failed. Check logs for details.";
             }
 
-            protected void onPostExecute( String result) {
+            protected void onPostExecute(String result) {
                 Snackbar.make(imageView, "Done...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 text.setText(result);
@@ -309,9 +327,16 @@ public class StartActivity extends AppCompatActivity {
 
 
 
-    private String convertResponseToString(BatchAnnotateImagesResponse response) {
+    private String insertResponseToDb(BatchAnnotateImagesResponse response) {
         String message = "I found these things:\n\n";
+        ContentValues Values = new ContentValues();
+        Values.put(ImageEntry.ImageTable.COLUMN_URI, imageUri.toString());
+        Values.put(ImageEntry.ImageTable.COLUMN_DATE, Calendar.getInstance().getTime().toString());
 
+
+
+        Log.e("dddddd", (String) Values.get(ImageEntry.ImageTable.COLUMN_DATE));
+        oldUri = imageUri;
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
         if (labels != null) {
             for (EntityAnnotation label : labels) {
@@ -321,7 +346,7 @@ public class StartActivity extends AppCompatActivity {
         } else {
             message += "nothing";
         }
-         imageDbHelper lol =new imageDbHelper(this);
+         ImageDbHelper lol =new ImageDbHelper(this);
         return message;
     }
 

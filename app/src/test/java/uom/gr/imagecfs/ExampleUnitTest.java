@@ -1,10 +1,12 @@
 package uom.gr.imagecfs;
 
-import android.content.Context;
+import android.net.Uri;
 
 import org.junit.Test;
 
-import uom.gr.imagecfs.data.imageDbHelper;
+import java.util.Calendar;
+
+import uom.gr.imagecfs.data.ImageEntry.ImageTable;
 
 import static org.junit.Assert.*;
 
@@ -19,5 +21,9 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
 
 
+    }
+    @Test
+    public void check_ImageEntry() throws Exception{
+        System.out.print();
     }
 }

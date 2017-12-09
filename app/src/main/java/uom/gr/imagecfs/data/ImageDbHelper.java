@@ -6,13 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 
-public class imageDbHelper extends SQLiteOpenHelper {
+public class ImageDbHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "images.db";
 
-    public imageDbHelper(Context context) {
+    public ImageDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -25,11 +25,11 @@ public class imageDbHelper extends SQLiteOpenHelper {
                 // forecasting, it's reasonable to assume the user will want information
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
-                ImageEntry.ImageTable.COLUMN_URI + " INTEGER PRIMARY KEY ," +
+                ImageEntry.ImageTable.COLUMN_URI + " TEXT PRIMARY KEY ," +
                 // AUTOINCREMENT
 
 
-                ImageEntry.ImageTable.COLUMN_DATE + " INTEGER , " +
+                ImageEntry.ImageTable.COLUMN_DATE + " TEXT , " +
                 ImageEntry.ImageTable.COLUMN_LABEL_ID + " INTEGER , " +
                 ImageEntry.ImageTable.COLUMN_TEXT_ID + " INTEGER , " +
                 ImageEntry.ImageTable.COLUMN_TYPE_ID + " INTEGER , " +
@@ -42,7 +42,7 @@ public class imageDbHelper extends SQLiteOpenHelper {
 
                 // foreign keys
                 " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_LABEL_ID + ") REFERENCES " +
-                ImageEntry.LebelTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
+                ImageEntry.LabelTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
 
                  " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_FACE_ID + ") REFERENCES " +
                 ImageEntry.FaceTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
@@ -58,17 +58,17 @@ public class imageDbHelper extends SQLiteOpenHelper {
                 " UNIQUE (" + ImageEntry.ImageTable.COLUMN_URI + ") ON CONFLICT REPLACE);";
 
 
-        final String SQL_CREATE_LABEL_TABEL = "CREATE TABLE " + ImageEntry.LebelTable.TABLE_NAME+ " (" +
+        final String SQL_CREATE_LABEL_TABEL = "CREATE TABLE " + ImageEntry.LabelTable.TABLE_NAME+ " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
-                ImageEntry.LebelTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ImageEntry.LabelTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
-                ImageEntry.LebelTable.COLUMN_SCORE + " REAL , " +
+                ImageEntry.LabelTable.COLUMN_SCORE + " REAL , " +
 
-                ImageEntry.LebelTable.COLUMN_DESCRIPTION + " TEXT , ";
+                ImageEntry.LabelTable.COLUMN_DESCRIPTION + " TEXT , ";
 
 
         final String SQL_CREATE_LOGO_TABEL = "CREATE TABLE " + ImageEntry.LogosTable.TABLE_NAME+ " (" +
@@ -146,6 +146,13 @@ public class imageDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.ImageTable.TABLE_NAME_IMAGE);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.LabelTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.LogosTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.TextTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.SafeTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.FaceTable.TABLE_NAME);
+        onCreate(sqLiteDatabase);
     }
 }
 
