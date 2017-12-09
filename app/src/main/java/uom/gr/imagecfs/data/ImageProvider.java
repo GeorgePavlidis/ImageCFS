@@ -56,29 +56,38 @@ public class ImageProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] columns, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
-        Cursor retCursor;
+        Cursor retCursor = null;
         final int match = sUriMatcher.match(uri);
-//
-//        switch (match) {
-//            case IMAGE:
-//                return ImageEntry.ImageTable.CONTENT_TYPE;
-//            case LABEL:
-//                return ImageEntry.LabelTable.CONTENT_TYPE;
-//            case FACE:
-//                return ImageEntry.FaceTable.CONTENT_TYPE;
-//            case LOGOS:
-//                return ImageEntry.LogosTable.CONTENT_TYPE;
-//            case TEXT:
-//                return ImageEntry.TextTable.CONTENT_TYPE;
-//            case SAFE:
-//                return ImageEntry.SafeTable.CONTENT_TYPE;
-//            default:
-//                throw new UnsupportedOperationException("Unknown uri: " + uri);
-//        }
-        return null;
+
+        switch (match) {
+            case IMAGE:
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ImageEntry.ImageTable.TABLE_NAME_IMAGE,
+                        columns,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            case LABEL:
+                break;
+            case FACE:
+                break;
+            case LOGOS:
+                break;
+            case TEXT:
+                break;
+            case SAFE:
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        return retCursor;
     }
 
     @Nullable

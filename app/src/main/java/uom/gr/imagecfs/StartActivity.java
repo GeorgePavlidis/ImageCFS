@@ -2,6 +2,7 @@ package uom.gr.imagecfs;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -348,8 +349,14 @@ public class StartActivity extends AppCompatActivity {
         Values.put(ImageEntry.ImageTable.COLUMN_SAFE_ID, (byte[]) null);
         Values.put(ImageEntry.ImageTable.COLUMN_WEB_ID, (byte[]) null);
 
-       Log.e("test insert",this.getContentResolver().insert(ImageEntry.ImageTable.CONTENT_URI,Values).getEncodedFragment());
+       Log.e("test insert",this.getContentResolver().insert(ImageEntry.ImageTable.CONTENT_URI,Values).getLastPathSegment());
 
+        Cursor cursor = this.getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, null, null, null, null);
+        String [] names = {""};
+        for(int i = 0; i < cursor.getCount(); i ++){
+            names[i] = cursor.getString(i);
+        }
+        Log.e("test select", names.toString());
 //        // convert the labels to string
 //        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
 //        if (labels != null) {
