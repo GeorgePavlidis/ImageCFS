@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +31,10 @@ import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
+import com.google.api.services.vision.v1.model.FaceAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.google.api.services.vision.v1.model.SafeSearchAnnotation;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,6 +45,8 @@ import java.util.Locale;
 
 import uom.gr.imagecfs.data.ImageDbHelper;
 import uom.gr.imagecfs.data.ImageEntry;
+
+import static java.security.AccessController.getContext;
 
 
 public class StartActivity extends AppCompatActivity {
@@ -103,7 +109,6 @@ public class StartActivity extends AppCompatActivity {
                 Uri lol = ImageEntry.ImageTable.buildTableUri(5);
                 Uri lol1 = ImageEntry.LabelTable.buildTableUri(5);
                 Uri lol2 = ImageEntry.TextTable.buildTableUri(5);
-                Log.e("Uri test",lol.toString()+lol1.toString()+lol2.toString());
             }
         });
 
@@ -329,25 +334,92 @@ public class StartActivity extends AppCompatActivity {
 
     private String insertResponseToDb(BatchAnnotateImagesResponse response) {
         String message = "I found these things:\n\n";
+
+
         ContentValues Values = new ContentValues();
         Values.put(ImageEntry.ImageTable.COLUMN_URI, imageUri.toString());
         Values.put(ImageEntry.ImageTable.COLUMN_DATE, Calendar.getInstance().getTime().toString());
+        Values.put(ImageEntry.ImageTable.COLUMN_LABEL_ID, (byte[]) null);
+        Values.put(ImageEntry.ImageTable.COLUMN_FACE_ID, (byte[]) null);
+        Values.put(ImageEntry.ImageTable.COLUMN_LANDMARK_ID, (byte[]) null);
+        Values.put(ImageEntry.ImageTable.COLUMN_LOGO_ID, (byte[]) null);
+        Values.put(ImageEntry.ImageTable.COLUMN_TYPE_ID, (byte[]) null);
+        Values.put(ImageEntry.ImageTable.COLUMN_TEXT_ID, (byte[]) null);
+        Values.put(ImageEntry.ImageTable.COLUMN_SAFE_ID, (byte[]) null);
+        Values.put(ImageEntry.ImageTable.COLUMN_WEB_ID, (byte[]) null);
 
+       Log.e("test insert",this.getContentResolver().insert(ImageEntry.ImageTable.CONTENT_URI,Values).getEncodedFragment());
 
-
-        Log.e("dddddd", (String) Values.get(ImageEntry.ImageTable.COLUMN_DATE));
-        oldUri = imageUri;
-        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-        if (labels != null) {
-            for (EntityAnnotation label : labels) {
-                message += String.format(Locale.US, "%.3f: %s", label.getScore(), label.getDescription());
-                message += "\n";
-            }
-        } else {
-            message += "nothing";
-        }
-         ImageDbHelper lol =new ImageDbHelper(this);
-        return message;
+//        // convert the labels to string
+//        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
+//        if (labels != null) {
+//            for (EntityAnnotation label : labels) {
+//                message.get(0).get(0).add(String.valueOf(label.getScore()));
+//                message.get(0).get(1).add(label.getDescription());
+//            }
+//        } else {
+//            message.get(0).get(0).add("nothing");
+//        }
+//
+//
+//        // convert the face to string
+//        List<FaceAnnotation> face = response.getResponses().get(0).getFaceAnnotations();
+//        if (face != null) {
+//            for (FaceAnnotation label : face) {
+//                message.get(1).get(0).add(String.valueOf(label.getAngerLikelihood()));
+//                message.get(1).get(1).add(String.valueOf(label.getBlurredLikelihood()));
+//                message.get(1).get(2).add(String.valueOf(label.getJoyLikelihood()));
+//                message.get(1).get(3).add(String.valueOf(label.getSorrowLikelihood()));
+//                message.get(1).get(4).add(String.valueOf(label.getSurpriseLikelihood()));
+//                message.get(1).get(5).add(String.valueOf(label.getHeadwearLikelihood()));
+//
+//
+//
+//            }
+//        } else {
+//            message.get(1).get(0).add("nothing");
+//        }
+//
+//
+//        // convert the logo to string
+//        List<EntityAnnotation> logos = response.getResponses().get(0).getLogoAnnotations();
+//        if (logos != null) {
+//            for (EntityAnnotation label : logos) {
+//                message.get(2).get(0).add(String.valueOf(label.getScore()));
+//                message.get(2).get(0).add(String.valueOf(label.getDescription()));
+//            }
+//        } else {
+//            message.get(2).get(0).add("nothing");
+//        }
+//
+//
+//
+//        // convert the text to string
+//        List<EntityAnnotation> text = response.getResponses().get(0).getTextAnnotations();
+//        if (text != null) {
+//            for (EntityAnnotation label : text) {
+//                message.get(3).get(0).add(String.valueOf(label.getDescription()));
+//            }
+//        } else {
+//            message.get(3).get(0).add("nothing");
+//        }
+//
+//
+//        // convert the safe to string
+//        SafeSearchAnnotation safe = response.getResponses().get(0).getSafeSearchAnnotation();
+//        if (safe != null) {
+//            message.get(4).get(0).add(String.valueOf(safe.getAdult()));
+//            message.get(4).get(1).add(String.valueOf(safe.getMedical()));
+//            message.get(4).get(2).add(String.valueOf(safe.getSpoof()));
+//            message.get(4).get(3).add(String.valueOf(safe.getViolence()));
+//
+//
+//
+//        } else {
+//            message.get(4).get(0).add("nothing");
+//        }
+//        return message;
+        return null;
     }
 
     public Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {

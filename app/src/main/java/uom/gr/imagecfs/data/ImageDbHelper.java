@@ -68,7 +68,7 @@ public class ImageDbHelper extends SQLiteOpenHelper {
 
                 ImageEntry.LabelTable.COLUMN_SCORE + " REAL , " +
 
-                ImageEntry.LabelTable.COLUMN_DESCRIPTION + " TEXT , ";
+                ImageEntry.LabelTable.COLUMN_DESCRIPTION + " TEXT  );";
 
 
         final String SQL_CREATE_LOGO_TABEL = "CREATE TABLE " + ImageEntry.LogosTable.TABLE_NAME+ " (" +
@@ -81,7 +81,7 @@ public class ImageDbHelper extends SQLiteOpenHelper {
 
                 ImageEntry.LogosTable.COLUMN_SCORE + " REAL , " +
 
-                ImageEntry.LogosTable.COLUMN_DESCRIPTION + " TEXT , ";
+                ImageEntry.LogosTable.COLUMN_DESCRIPTION + " TEXT ); ";
 
 
         final String SQL_CREATE_TEXT_TABEL = "CREATE TABLE " + ImageEntry.TextTable.TABLE_NAME+ " (" +
@@ -92,7 +92,7 @@ public class ImageDbHelper extends SQLiteOpenHelper {
                 // should be sorted accordingly.
                 ImageEntry.TextTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
-                ImageEntry.TextTable.COLUMN_DESCRIPTION + " TEXT , ";
+                ImageEntry.TextTable.COLUMN_DESCRIPTION + " TEXT  );";
 
 
         final String SQL_CREATE_SAFE_TABEL = "CREATE TABLE " + ImageEntry.SafeTable.TABLE_NAME+ " (" +
@@ -109,7 +109,7 @@ public class ImageDbHelper extends SQLiteOpenHelper {
 
                 ImageEntry.SafeTable.COLUMN_SPOOF + " TEXT , " +
 
-                ImageEntry.SafeTable.COLUMN_VIOLENCE + " TEXT , ";
+                ImageEntry.SafeTable.COLUMN_VIOLENCE + " TEXT );";
 
         final String SQL_CREATE_FACE_TABEL = "CREATE TABLE " + ImageEntry.FaceTable.TABLE_NAME+ " (" +
                 // Why AutoIncrement here, and not above?
@@ -127,15 +127,14 @@ public class ImageDbHelper extends SQLiteOpenHelper {
 
                 ImageEntry.FaceTable.COLUMN_SORROW_LIKELIHOOD + " TEXT , " +
 
-                ImageEntry.FaceTable.COLUMN_HEADWEAR_LIKELIHOOD + " TEXT , " +
+                ImageEntry.FaceTable.COLUMN_SURPRISE_LIKELIHOOD + " TEXT , " +
 
-                ImageEntry.FaceTable.COLUMN_HEADWEAR_LIKELIHOOD + " TEXT , " +
-
-                ImageEntry.FaceTable.COLUMN_SURPRISE_LIKELIHOOD + " TEXT , " ;
+                ImageEntry.FaceTable.COLUMN_HEADWEAR_LIKELIHOOD + " TEXT ); ";
 
 
 
-        Log.e("ffffffffffffff",SQL_CREATE_LABEL_TABEL+"\n"+SQL_CREATE_LOGO_TABEL+"\n"+SQL_CREATE_TEXT_TABEL+"\n"+SQL_CREATE_SAFE_TABEL);
+        Log.e("ffffffffffffff",SQL_CREATE_IMAGE_TABLE+"\n"+SQL_CREATE_LABEL_TABEL+"\n"+SQL_CREATE_LOGO_TABEL+"\n"+SQL_CREATE_TEXT_TABEL+"\n"+SQL_CREATE_SAFE_TABEL);
+        sqLiteDatabase.execSQL(SQL_CREATE_IMAGE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_FACE_TABEL);
         sqLiteDatabase.execSQL(SQL_CREATE_LABEL_TABEL);
         sqLiteDatabase.execSQL(SQL_CREATE_LOGO_TABEL);

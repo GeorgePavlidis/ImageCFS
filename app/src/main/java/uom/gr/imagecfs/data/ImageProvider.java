@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
  * Created by George Pavlidis on 09-Dec-17.
  */
 
-public class ImagePovider extends ContentProvider {
+public class ImageProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private ImageDbHelper mOpenHelper;
@@ -51,7 +51,7 @@ public class ImagePovider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mOpenHelper = new ImageDbHelper(getContext());
-        return false;
+        return true;
     }
 
     @Nullable
