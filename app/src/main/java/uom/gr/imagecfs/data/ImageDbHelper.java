@@ -1,6 +1,7 @@
 package uom.gr.imagecfs.data;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -40,69 +41,77 @@ public class ImageDbHelper extends SQLiteOpenHelper {
                 ImageEntry.ImageTable.COLUMN_SAFE_ID + " INTEGER , " +
 
 
-                // foreign keys
-                " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_LABEL_ID + ") REFERENCES " +
-                ImageEntry.LabelTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
-
-                 " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_FACE_ID + ") REFERENCES " +
-                ImageEntry.FaceTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
-
-
-                " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_TEXT_ID + ") REFERENCES " +
-                ImageEntry.TextTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
-
-                " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_LOGO_ID + ") REFERENCES " +
-                ImageEntry.LogosTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
-
-
-                " UNIQUE (" + ImageEntry.ImageTable.COLUMN_URI + ") ON CONFLICT REPLACE);";
+//                // foreign keys
+//                " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_LABEL_ID + ") REFERENCES " +
+//                ImageEntry.LabelTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
+//
+//                 " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_FACE_ID + ") REFERENCES " +
+//                ImageEntry.FaceTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
+//
+//
+//                " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_TEXT_ID + ") REFERENCES " +
+//                ImageEntry.TextTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
+//
+//                " FOREIGN KEY (" +  ImageEntry.ImageTable.COLUMN_LOGO_ID + ") REFERENCES " +
+//                ImageEntry.LogosTable.TABLE_NAME + "(" +ImageEntry.FaceTable.COLUMN_ID +") ," +
 
 
-        final String SQL_CREATE_LABEL_TABEL = "CREATE TABLE " + ImageEntry.LabelTable.TABLE_NAME+ " (" +
+                " UNIQUE (" + ImageEntry.ImageTable.COLUMN_URI + ") ON CONFLICT ABORT);";
+
+
+        final String SOL_CREATE_LABEL_TABLE = "CREATE TABLE " + ImageEntry.LabelTable.TABLE_NAME+ " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
-                ImageEntry.LabelTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ImageEntry.LabelTable._ID + " INT PRIMARY KEY, " +
 
+                ImageEntry.LabelTable.COLUMN_ID + " TEXT ," +
+                //AUTOINCREMENT
                 ImageEntry.LabelTable.COLUMN_SCORE + " REAL , " +
 
                 ImageEntry.LabelTable.COLUMN_DESCRIPTION + " TEXT  );";
 
 
-        final String SQL_CREATE_LOGO_TABEL = "CREATE TABLE " + ImageEntry.LogosTable.TABLE_NAME+ " (" +
+        final String SOL_CREATE_LOGO_TABLE = "CREATE TABLE " + ImageEntry.LogosTable.TABLE_NAME+ " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
-                ImageEntry.LogosTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ImageEntry.LogosTable._ID + " INT PRIMARY KEY, " +
 
+                ImageEntry.LogosTable.COLUMN_ID + " TEXT ," +
+                //AUTOINCREMENT
                 ImageEntry.LogosTable.COLUMN_SCORE + " REAL , " +
 
                 ImageEntry.LogosTable.COLUMN_DESCRIPTION + " TEXT ); ";
 
 
-        final String SQL_CREATE_TEXT_TABEL = "CREATE TABLE " + ImageEntry.TextTable.TABLE_NAME+ " (" +
+        final String SOL_CREATE_TEXT_TABLE = "CREATE TABLE " + ImageEntry.TextTable.TABLE_NAME+ " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
-                ImageEntry.TextTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ImageEntry.LabelTable._ID + " INT PRIMARY KEY, " +
 
+                ImageEntry.TextTable.COLUMN_ID + " TEXT  , " +
+                //AUTOINCREMENT
                 ImageEntry.TextTable.COLUMN_DESCRIPTION + " TEXT  );";
 
 
-        final String SQL_CREATE_SAFE_TABEL = "CREATE TABLE " + ImageEntry.SafeTable.TABLE_NAME+ " (" +
+        final String SOL_CREATE_SAFE_TABLE = "CREATE TABLE " + ImageEntry.SafeTable.TABLE_NAME+ " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
-                ImageEntry.SafeTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ImageEntry.SafeTable._ID + " INT PRIMARY KEY, " +
 
+                ImageEntry.SafeTable.COLUMN_ID + " TEXT ," +
+                //AUTOINCREMENT
                 ImageEntry.SafeTable.COLUMN_ADULT + " TEXT , " +
 
                 ImageEntry.SafeTable.COLUMN_MEDICAL + " TEXT , " +
@@ -111,14 +120,16 @@ public class ImageDbHelper extends SQLiteOpenHelper {
 
                 ImageEntry.SafeTable.COLUMN_VIOLENCE + " TEXT );";
 
-        final String SQL_CREATE_FACE_TABEL = "CREATE TABLE " + ImageEntry.FaceTable.TABLE_NAME+ " (" +
+        final String SOL_CREATE_FACE_TABLE = "CREATE TABLE " + ImageEntry.FaceTable.TABLE_NAME+ " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
                 // forecasting, it's reasonable to assume the user will want information
                 // for a certain date and all dates *following*, so the forecast data
                 // should be sorted accordingly.
-                ImageEntry.LogosTable.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ImageEntry.FaceTable._ID + " INT PRIMARY KEY, " +
 
+                ImageEntry.LogosTable.COLUMN_ID + " TEXT ," +
+                //AUTOINCREMENT
                 ImageEntry.FaceTable.COLUMN_ANGER_LIKELIHOOD + " TEXT , " +
 
                 ImageEntry.FaceTable.COLUMN_BLURRED_LIKELIHOOD + " TEXT , " +
@@ -133,13 +144,13 @@ public class ImageDbHelper extends SQLiteOpenHelper {
 
 
 
-        Log.e("ffffffffffffff",SQL_CREATE_IMAGE_TABLE+"\n"+SQL_CREATE_LABEL_TABEL+"\n"+SQL_CREATE_LOGO_TABEL+"\n"+SQL_CREATE_TEXT_TABEL+"\n"+SQL_CREATE_SAFE_TABEL);
+        Log.e("ffffffffffffff",SQL_CREATE_IMAGE_TABLE+"\n"+SOL_CREATE_LABEL_TABLE+"\n"+SOL_CREATE_LOGO_TABLE+"\n"+SOL_CREATE_TEXT_TABLE+"\n"+SOL_CREATE_SAFE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_IMAGE_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_FACE_TABEL);
-        sqLiteDatabase.execSQL(SQL_CREATE_LABEL_TABEL);
-        sqLiteDatabase.execSQL(SQL_CREATE_LOGO_TABEL);
-        sqLiteDatabase.execSQL(SQL_CREATE_TEXT_TABEL);
-        sqLiteDatabase.execSQL(SQL_CREATE_SAFE_TABEL);
+        sqLiteDatabase.execSQL(SOL_CREATE_FACE_TABLE);
+        sqLiteDatabase.execSQL(SOL_CREATE_LABEL_TABLE);
+        sqLiteDatabase.execSQL(SOL_CREATE_LOGO_TABLE);
+        sqLiteDatabase.execSQL(SOL_CREATE_TEXT_TABLE);
+        sqLiteDatabase.execSQL(SOL_CREATE_SAFE_TABLE);
     }
 
     @Override
@@ -153,6 +164,10 @@ public class ImageDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.FaceTable.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
-}
 
+
+
+
+
+}
 

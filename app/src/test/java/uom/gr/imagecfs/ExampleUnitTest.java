@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Calendar;
 
+import uom.gr.imagecfs.data.ImageDbHelper;
 import uom.gr.imagecfs.data.ImageEntry.ImageTable;
 
 import static org.junit.Assert.*;
@@ -24,6 +25,6 @@ public class ExampleUnitTest {
     }
     @Test
     public void check_ImageEntry() throws Exception{
-        System.out.print();
+        System.out.print("jhg");
     }
 }

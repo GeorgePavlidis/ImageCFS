@@ -39,7 +39,7 @@ public class StartActivity extends AppCompatActivity {
     Boolean isOpen = false;
 
     private Uri imageUri;
-    private  Uri oldUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

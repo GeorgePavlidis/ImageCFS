@@ -32,11 +32,11 @@ public class ImageEntry {
 
         public static final String COLUMN_DATE = "Date";
 
-        public static final String COLUMN_LABEL_ID = " Label";
+        public static final String COLUMN_LABEL_ID = "Label";
 
-        public static final String COLUMN_FACE_ID = " Face";
+        public static final String COLUMN_FACE_ID = "Face";
 
-        public static final String COLUMN_LANDMARK_ID = " Landmark";
+        public static final String COLUMN_LANDMARK_ID = "Landmark";
 
         public static final String COLUMN_LOGO_ID = "Logo";
 
@@ -59,7 +59,7 @@ public class ImageEntry {
 
     public static final class LabelTable implements BaseColumns {
 
-        public static final String TABLE_NAME= "Lebel";
+        public static final String TABLE_NAME= "Label";
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();

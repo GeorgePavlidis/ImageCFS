@@ -2,6 +2,7 @@ package uom.gr.imagecfs;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Vector;
 
 import uom.gr.imagecfs.data.ImageEntry;
 
@@ -182,98 +184,124 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
         String message = "I found these things:\n\n";
 
 
-        ContentValues Values = new ContentValues();
-        Values.put(ImageEntry.ImageTable.COLUMN_URI, imageUri.toString());
-        Values.put(ImageEntry.ImageTable.COLUMN_DATE, Calendar.getInstance().getTime().toString());
-        Values.put(ImageEntry.ImageTable.COLUMN_LABEL_ID, (byte[]) null);
-        Values.put(ImageEntry.ImageTable.COLUMN_FACE_ID, (byte[]) null);
-        Values.put(ImageEntry.ImageTable.COLUMN_LANDMARK_ID, (byte[]) null);
-        Values.put(ImageEntry.ImageTable.COLUMN_LOGO_ID, (byte[]) null);
-        Values.put(ImageEntry.ImageTable.COLUMN_TYPE_ID, (byte[]) null);
-        Values.put(ImageEntry.ImageTable.COLUMN_TEXT_ID, (byte[]) null);
-        Values.put(ImageEntry.ImageTable.COLUMN_SAFE_ID, (byte[]) null);
-        Values.put(ImageEntry.ImageTable.COLUMN_WEB_ID, (byte[]) null);
+        ContentValues imageValues = new ContentValues();
+        imageValues.put(ImageEntry.ImageTable.COLUMN_URI, imageUri.toString());
+        imageValues.put(ImageEntry.ImageTable.COLUMN_DATE, Calendar.getInstance().getTime().toString());
 
-        Log.e("test insert",mContext.getContentResolver().insert(ImageEntry.ImageTable.CONTENT_URI,Values).getLastPathSegment());
 
-//        Cursor cursor = this.getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, null, null, null, null);
-//        String [] names = {""};
+
+
+
+        // convert the labels to string
+        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
+
+        if (labels != null) {
+
+            imageValues.put(ImageEntry.ImageTable.COLUMN_LABEL_ID, 1);
+
+            for (EntityAnnotation label : labels) {
+                ContentValues values = new ContentValues();
+                values.put(ImageEntry.LabelTable.COLUMN_SCORE, label.getScore());
+                values.put(ImageEntry.LabelTable.COLUMN_DESCRIPTION, label.getDescription());
+                values.put(ImageEntry.LabelTable.COLUMN_ID, imageUri.toString());
+
+
+                mContext.getContentResolver().insert(ImageEntry.LabelTable.CONTENT_URI,values);
+            }
+        }
+
+
+        // convert the face to string
+        List<FaceAnnotation> face = response.getResponses().get(0).getFaceAnnotations();
+        if (face != null) {
+            imageValues.put(ImageEntry.ImageTable.COLUMN_FACE_ID, 1);
+            for (FaceAnnotation label : face) {
+                ContentValues values = new ContentValues();
+                values.put(ImageEntry.FaceTable.COLUMN_ID,imageUri.toString());
+                values.put(ImageEntry.FaceTable.COLUMN_ANGER_LIKELIHOOD,label.getAngerLikelihood());
+                values.put(ImageEntry.FaceTable.COLUMN_BLURRED_LIKELIHOOD,label.getBlurredLikelihood());
+                values.put(ImageEntry.FaceTable.COLUMN_JOY_LIKELIHOOD,label.getJoyLikelihood());
+                values.put(ImageEntry.FaceTable.COLUMN_SORROW_LIKELIHOOD,label.getSorrowLikelihood());
+                values.put(ImageEntry.FaceTable.COLUMN_SURPRISE_LIKELIHOOD,label.getSurpriseLikelihood());
+                values.put(ImageEntry.FaceTable.COLUMN_HEADWEAR_LIKELIHOOD,label.getHeadwearLikelihood());
+
+
+                mContext.getContentResolver().insert(ImageEntry.FaceTable.CONTENT_URI,values);
+
+
+            }
+        }
+
+
+        // convert the logo to string
+        List<EntityAnnotation> logos = response.getResponses().get(0).getLogoAnnotations();
+        if (logos != null) {
+            imageValues.put(ImageEntry.ImageTable.COLUMN_LOGO_ID, 1);
+
+            for (EntityAnnotation label : logos) {
+                ContentValues values = new ContentValues();
+
+                values.put(ImageEntry.LogosTable.COLUMN_ID,imageUri.toString());
+                values.put(ImageEntry.LogosTable.COLUMN_SCORE,label.getScore());
+                values.put(ImageEntry.LogosTable.COLUMN_DESCRIPTION,label.getDescription());
+
+                mContext.getContentResolver().insert(ImageEntry.LogosTable.CONTENT_URI,values);
+
+            }
+        }
+
+
+
+        // convert the text to string
+        List<EntityAnnotation> text = response.getResponses().get(0).getTextAnnotations();
+        if (text != null) {
+            imageValues.put(ImageEntry.ImageTable.COLUMN_TEXT_ID, 1);
+
+            for (EntityAnnotation label : text) {
+                ContentValues values = new ContentValues();
+
+                values.put(ImageEntry.TextTable.COLUMN_ID,imageUri.toString());
+                values.put(ImageEntry.TextTable.COLUMN_DESCRIPTION,label.getDescription());
+
+                mContext.getContentResolver().insert(ImageEntry.TextTable.CONTENT_URI,values);
+
+            }
+        }
+
+
+        // convert the safe to string
+        SafeSearchAnnotation safe = response.getResponses().get(0).getSafeSearchAnnotation();
+        if (safe != null) {
+            imageValues.put(ImageEntry.ImageTable.COLUMN_SAFE_ID, 1);
+
+            ContentValues values = new ContentValues();
+
+            values.put(ImageEntry.SafeTable.COLUMN_ID,imageUri.toString());
+            values.put(ImageEntry.SafeTable.COLUMN_ADULT,safe.getAdult());
+            values.put(ImageEntry.SafeTable.COLUMN_MEDICAL,safe.getMedical());
+            values.put(ImageEntry.SafeTable.COLUMN_SPOOF,safe.getSpoof());
+            values.put(ImageEntry.SafeTable.COLUMN_VIOLENCE,safe.getViolence());
+
+            mContext.getContentResolver().insert(ImageEntry.SafeTable.CONTENT_URI,values);
+
+        }
+
+        Uri m = mContext.getContentResolver().insert(ImageEntry.ImageTable.CONTENT_URI, imageValues);
+        Cursor cursor = mContext.getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID+"= '"+imageUri.toString()+"'", null, null);
+
+//        String [] names = new String[100];
 //        for(int i = 0; i < cursor.getCount(); i ++){
 //            names[i] = cursor.getString(i);
 //        }
-//        Log.e("test select", names.toString());
-        // convert the labels to string
-//        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-//        if (labels != null) {
-//            String id = this.getContentResolver().insert(ImageEntry.ImageTable.CONTENT_URI, Values).getLastPathSegment();
-//            Values.put(ImageEntry.ImageTable.COLUMN_LABEL_ID, Integer.parseInt(id));
-//
-//            for (EntityAnnotation label : labels) {
-//                message.get(0).get(0).add(String.valueOf(label.getScore()));
-//                message.get(0).get(1).add(label.getDescription());
-//            }
-//        } else {
-//            message.get(0).get(0).add("nothing");
-//        }
-//
-//
-//        // convert the face to string
-//        List<FaceAnnotation> face = response.getResponses().get(0).getFaceAnnotations();
-//        if (face != null) {
-//            for (FaceAnnotation label : face) {
-//                message.get(1).get(0).add(String.valueOf(label.getAngerLikelihood()));
-//                message.get(1).get(1).add(String.valueOf(label.getBlurredLikelihood()));
-//                message.get(1).get(2).add(String.valueOf(label.getJoyLikelihood()));
-//                message.get(1).get(3).add(String.valueOf(label.getSorrowLikelihood()));
-//                message.get(1).get(4).add(String.valueOf(label.getSurpriseLikelihood()));
-//                message.get(1).get(5).add(String.valueOf(label.getHeadwearLikelihood()));
-//
-//
-//
-//            }
-//        } else {
-//            message.get(1).get(0).add("nothing");
-//        }
-//
-//
-//        // convert the logo to string
-//        List<EntityAnnotation> logos = response.getResponses().get(0).getLogoAnnotations();
-//        if (logos != null) {
-//            for (EntityAnnotation label : logos) {
-//                message.get(2).get(0).add(String.valueOf(label.getScore()));
-//                message.get(2).get(0).add(String.valueOf(label.getDescription()));
-//            }
-//        } else {
-//            message.get(2).get(0).add("nothing");
-//        }
-//
-//
-//
-//        // convert the text to string
-//        List<EntityAnnotation> text = response.getResponses().get(0).getTextAnnotations();
-//        if (text != null) {
-//            for (EntityAnnotation label : text) {
-//                message.get(3).get(0).add(String.valueOf(label.getDescription()));
-//            }
-//        } else {
-//            message.get(3).get(0).add("nothing");
-//        }
-//
-//
-//        // convert the safe to string
-//        SafeSearchAnnotation safe = response.getResponses().get(0).getSafeSearchAnnotation();
-//        if (safe != null) {
-//            message.get(4).get(0).add(String.valueOf(safe.getAdult()));
-//            message.get(4).get(1).add(String.valueOf(safe.getMedical()));
-//            message.get(4).get(2).add(String.valueOf(safe.getSpoof()));
-//            message.get(4).get(3).add(String.valueOf(safe.getViolence()));
-//
-//
-//
-//        } else {
-//            message.get(4).get(0).add("nothing");
-//        }
-//        return message;
-        return null;
+        Log.e("test select", String.valueOf(cursor.getCount()));
+    cursor.close();
+        try {
+            Log.e("test insert",m.getLastPathSegment());
+        }catch (Exception e){
+            Log.e("test insert", String.valueOf(m));
+        }
+
+
+        return message;
     }
         }

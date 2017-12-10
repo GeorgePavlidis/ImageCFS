@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by George Pavlidis on 09-Dec-17.
@@ -62,6 +63,8 @@ public class ImageProvider extends ContentProvider {
         Cursor retCursor = null;
         final int match = sUriMatcher.match(uri);
 
+       Cursor lol =  mOpenHelper.getReadableDatabase().rawQuery("SELECT  COUNT(*) FROM "+ ImageEntry.ImageTable.TABLE_NAME_IMAGE,null);
+
         switch (match) {
             case IMAGE:
                 retCursor = mOpenHelper.getReadableDatabase().query(
@@ -75,6 +78,15 @@ public class ImageProvider extends ContentProvider {
                 );
                 break;
             case LABEL:
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ImageEntry.LabelTable.TABLE_NAME,
+                        columns,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             case FACE:
                 break;
@@ -119,7 +131,7 @@ public class ImageProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         final SQLiteDatabase db =mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        Uri returnUri;
+        Uri returnUri =null;
 
         switch (match) {
             case IMAGE: {
@@ -127,7 +139,8 @@ public class ImageProvider extends ContentProvider {
                 if (_id > 0)
                     returnUri = ImageEntry.ImageTable.buildTableUri(_id);
                 else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                    Log.i("Not insert","Failed to insert row into " + uri +"\n"+ contentValues);
+                    //throw new android.database.SQLException("Failed to insert row into " + uri +"\n"+ contentValues);
                 break;
             }
             case LABEL: {
@@ -174,6 +187,10 @@ public class ImageProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
+
+        Cursor lol =  mOpenHelper.getReadableDatabase().rawQuery("SELECT  COUNT(*) FROM "+ ImageEntry.ImageTable.TABLE_NAME_IMAGE,null);
+
+
         return returnUri;
 
     }
