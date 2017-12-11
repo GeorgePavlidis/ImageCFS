@@ -19,7 +19,7 @@ import java.io.IOException;
 import uom.gr.imagecfs.data.ImageEntry;
 
 
-public class StartActivity extends AppCompatActivity {
+public class StartFragment extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 100;
 
@@ -62,7 +62,7 @@ public class StartActivity extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent lol = new Intent(StartActivity.this, DetailsActivity.class);
+                Intent lol = new Intent(StartFragment.this, DetailsActivity.class);
                 startActivity(lol);
             }
         });

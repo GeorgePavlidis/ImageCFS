@@ -1,5 +1,6 @@
 package uom.gr.imagecfs;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -39,6 +40,7 @@ import uom.gr.imagecfs.data.ImageEntry;
 
 class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
 
+    @SuppressLint("StaticFieldLeak")
     private final Context mContext;
     private final Uri imageUri;
     private static final int PICK_IMAGE = 100;
@@ -293,8 +295,17 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
 //        for(int i = 0; i < cursor.getCount(); i ++){
 //            names[i] = cursor.getString(i);
 //        }
-        Log.e("test select", String.valueOf(cursor.getCount()));
-    cursor.close();
+        cursor.moveToFirst();
+        for(int i=0;i<cursor.getCount();i++) {
+            if (cursor.getCount() > 0) {
+                Log.e("test select",
+                        String.valueOf(cursor.getDouble(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_SCORE))
+                                + " " +
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_DESCRIPTION))));
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
         try {
             Log.e("test insert",m.getLastPathSegment());
         }catch (Exception e){

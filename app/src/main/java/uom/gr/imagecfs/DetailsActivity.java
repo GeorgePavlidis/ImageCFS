@@ -16,7 +16,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 
 
-    private Tab_Settings.SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -47,7 +47,7 @@ public class DetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar2);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new Tab_Settings.SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);

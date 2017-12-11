@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/fab_margin_right"
     android:paddingRight="@dimen/fab_margin_right"
     android:paddingTop="@dimen/activity_horizontal_margin"
-    tools:context="uom.gr.imagecfs.StartActivity">
+    tools:context="uom.gr.imagecfs.StartFragment">
 
 
     <ImageView

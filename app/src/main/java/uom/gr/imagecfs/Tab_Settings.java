@@ -1,5 +1,6 @@
 package uom.gr.imagecfs;
 
+import android.annotation.SuppressLint;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
@@ -14,59 +15,16 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-public class Tab_Settings extends AppCompatActivity {
 
+    @SuppressLint("ValidFragment")
+    class PlaceholderFragment extends Fragment {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab);
-
-
-
-
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main3, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         public PlaceholderFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
+
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -79,8 +37,8 @@ public class Tab_Settings extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.content_detail_, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.large_text);
+            View rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
+            //TextView textView = (TextView) rootView.findViewById(R.id.large_text);
             if(getArguments().getInt(ARG_SECTION_NUMBER)==1) {
                 ItemFragment itemFragment = new ItemFragment();
                 rootView = itemFragment.onCreate(inflater, container, savedInstanceState,getActivity());
@@ -95,7 +53,7 @@ public class Tab_Settings extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public static class SectionsPagerAdapter extends FragmentPagerAdapter {
+    class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -114,4 +72,4 @@ public class Tab_Settings extends AppCompatActivity {
             return 3;
         }
     }
-}
+
