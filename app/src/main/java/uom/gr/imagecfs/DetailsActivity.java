@@ -1,8 +1,10 @@
 package uom.gr.imagecfs;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -13,6 +15,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+
+import java.io.IOException;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -52,6 +57,19 @@ public class DetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar2);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+
+
+        Bitmap bitmap = null;
+        try {
+            bitmap = StartFragment.scaleBitmapDown (
+                    MediaStore.Images.Media.getBitmap(getContentResolver(),
+                    Uri.parse((String) getIntent().getSerializableExtra("image"))
+                    ), 1200);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImageView imageView = findViewById(R.id.imageView_toolbar);
+        imageView.setImageBitmap(bitmap);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
                                                              Uri.parse((String) getIntent().getSerializableExtra("image")));
