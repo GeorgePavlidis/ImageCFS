@@ -1,31 +1,45 @@
 package uom.gr.imagecfs;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
+import uom.gr.imagecfs.data.ImageEntry;
 
-    @SuppressLint("ValidFragment")
+
+@SuppressLint("ValidFragment")
     class PlaceholderFragment extends Fragment {
 
         private static final String ARG_SECTION_NUMBER = "section_number";
+
+        private MyArrayAdapter  myArrayAdapter;
+        private ListView mListView;
+        private static Uri imageUri;
+
 
         public PlaceholderFragment() {
         }
 
 
-        public static PlaceholderFragment newInstance(int sectionNumber) {
+        public static PlaceholderFragment newInstance(int sectionNumber,Uri img) {
+            imageUri = img;
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -36,40 +50,53 @@ import android.widget.TextView;
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
-            //TextView textView = (TextView) rootView.findViewById(R.id.large_text);
-            if(getArguments().getInt(ARG_SECTION_NUMBER)==1) {
-                ItemFragment itemFragment = new ItemFragment();
-                rootView = itemFragment.onCreate(inflater, container, savedInstanceState,getActivity());
+            if(getArguments().getInt(ARG_SECTION_NUMBER)==4) {
+                Cursor cursor = getActivity().getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
+                cursor.moveToFirst();
+                myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0);
+            }else if(getArguments().getInt(ARG_SECTION_NUMBER)==0) {
             }
 
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            View rootView = inflater.inflate(R.layout.fragment_item, container, false);
+
+
+
+            mListView = rootView.findViewById(R.id.listview_items);
+            mListView.setAdapter(myArrayAdapter);
+
+
             return rootView;
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
+
     class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+
+        private  Uri imageUri;
+        private int TotalTabs=5;
+        public SectionsPagerAdapter(FragmentManager fm, Uri img) {
             super(fm);
+            setCount();
+            imageUri=img;
+
         }
 
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position + 1, imageUri);
         }
 
         @Override
         public int getCount() {
 
-            return 3;
+            return TotalTabs;
+        }
+
+        private void setCount(){
+
         }
     }
 

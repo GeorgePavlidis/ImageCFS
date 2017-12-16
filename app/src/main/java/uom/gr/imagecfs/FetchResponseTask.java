@@ -3,6 +3,7 @@ package uom.gr.imagecfs;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -58,6 +59,18 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
             @Override
             protected String doInBackground(final Bitmap...params) {
                 final Bitmap bitmap=params[0];
+                Cursor image = mContext.getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, null, ImageEntry.ImageTable.COLUMN_URI + "= '" + imageUri.toString() + "'", null, null);
+                image.moveToFirst();
+                Log.i("image",imageUri.toString());
+                try {
+                    if (image.getString(image.getColumnIndex(ImageEntry.ImageTable.COLUMN_URI)).equals(imageUri.toString())){
+                        Log.e("test check","cool");
+                        return "empty";
+                    }
+
+                }catch (Exception e){
+                    Log.e("test check-try","cool");
+                }
 
                 try {
                     HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
@@ -65,10 +78,8 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
 
                     VisionRequestInitializer requestInitializer =
                             new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
-                                /**
-                                 * We override this so we can inject important identifying fields into the HTTP
-                                 * headers. This enables use of a restricted cloud platform API key.
-                                 */
+
+
                                 @Override
                                 protected void initializeVisionRequest(VisionRequest<?> visionRequest)
                                         throws IOException {
@@ -174,6 +185,15 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
 
                 return "Cloud Vision API request failed. Check logs for details.";
             }
+
+    @Override
+    protected void onPostExecute( String result) {
+        Intent lol = new Intent( mContext, DetailsActivity.class);
+        lol.putExtra("image",imageUri.toString());
+        mContext.startActivity(lol);
+        Log.e(TAG, "The Result is " + result);
+
+    }
 
 
 
@@ -291,10 +311,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
         Uri m = mContext.getContentResolver().insert(ImageEntry.ImageTable.CONTENT_URI, imageValues);
         Cursor cursor = mContext.getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID+"= '"+imageUri.toString()+"'", null, null);
 
-//        String [] names = new String[100];
-//        for(int i = 0; i < cursor.getCount(); i ++){
-//            names[i] = cursor.getString(i);
-//        }
+
         cursor.moveToFirst();
         for(int i=0;i<cursor.getCount();i++) {
             if (cursor.getCount() > 0) {

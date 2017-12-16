@@ -71,9 +71,7 @@ public class StartFragment extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 fabAction(isOpen);
-                Uri lol = ImageEntry.ImageTable.buildTableUri(5);
-                Uri lol1 = ImageEntry.LabelTable.buildTableUri(5);
-                Uri lol2 = ImageEntry.TextTable.buildTableUri(5);
+
             }
         });
 
@@ -162,9 +160,8 @@ public class StartFragment extends AppCompatActivity {
 
     private void callCloudVision(final Bitmap bitmap) throws IOException {
         text.setText("Wait, loading...");
-        FetchResponseTask imageTask =new FetchResponseTask(this, imageUri);
+        FetchResponseTask imageTask =new FetchResponseTask(StartFragment.this, imageUri);
         imageTask.execute(bitmap);
-
     }
 
 

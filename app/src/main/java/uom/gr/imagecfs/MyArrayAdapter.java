@@ -42,14 +42,16 @@ public class MyArrayAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // Read score from cursor
-        Double score = cursor.getDouble(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_SCORE));
+        Double scr = cursor.getDouble(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_SCORE))*100;
+        int score = scr.intValue();
+
         // set the score text
         TextView score_txt = (TextView) view.findViewById(R.id.score_textview);
-        score_txt.setText(  String.valueOf(score ));
+        score_txt.setText(  String.valueOf(score+"%"));
 
         //set the bar progress
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.item_bar);
-        progressBar.setProgress(score.intValue());
+        progressBar.setProgress(score);
 
 
         // Read Description from cursor
