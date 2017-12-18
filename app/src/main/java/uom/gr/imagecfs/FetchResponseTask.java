@@ -44,6 +44,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
     @SuppressLint("StaticFieldLeak")
     private final Context mContext;
     private final Uri imageUri;
+    public static Bitmap bitmap;
     private static final int PICK_IMAGE = 100;
     public static final String FILE_NAME = "temp.jpg";
     private static final String CLOUD_VISION_API_KEY = "AIzaSyCRZqKBmSkyl_sGNQh2eM6uLX1ISVmyov0";
@@ -58,10 +59,11 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
 
             @Override
             protected String doInBackground(final Bitmap...params) {
-                final Bitmap bitmap=params[0];
+                bitmap=params[0];
                 Cursor image = mContext.getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, null, ImageEntry.ImageTable.COLUMN_URI + "= '" + imageUri.toString() + "'", null, null);
                 image.moveToFirst();
                 Log.i("image",imageUri.toString());
+
                 try {
                     if (image.getString(image.getColumnIndex(ImageEntry.ImageTable.COLUMN_URI)).equals(imageUri.toString())){
                         Log.e("test check","cool");
@@ -135,7 +137,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
                             {
                                 Feature feature = new Feature();
                                 feature.setType("LOGO_DETECTION");
-                                feature.setMaxResults(10);
+                                feature.setMaxResults(50);
                                 add(feature);
                             }
 
@@ -188,8 +190,31 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
 
     @Override
     protected void onPostExecute( String result) {
+        Cursor cursor = mContext.getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, null, ImageEntry.ImageTable.COLUMN_URI + "='" + imageUri.toString() + "'", null, null);
+        cursor.moveToFirst();
+
+        for(int i=0;i<cursor.getCount();i++) {
+            if (cursor.getCount() > 0) {
+                Log.e("test select",
+                        String.valueOf(
+                                " LABEL " +
+                                cursor.getDouble(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_LABEL_ID))
+                                + " FACE " +
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_FACE_ID))
+                                + " LOGO " +
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_LOGO_ID))
+                                + " TEXT " +
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_TEXT_ID))
+                                + " SAFE " +
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_SAFE_ID))
+                        ));
+            }
+        }
+            cursor.moveToNext();
+
         Intent lol = new Intent( mContext, DetailsActivity.class);
         lol.putExtra("image",imageUri.toString());
+        //lol.putExtra("bitmap",bitmap);
         mContext.startActivity(lol);
         Log.e(TAG, "The Result is " + result);
 

@@ -89,12 +89,48 @@ public class ImageProvider extends ContentProvider {
                 );
                 break;
             case FACE:
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ImageEntry.FaceTable.TABLE_NAME,
+                        columns,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             case LOGOS:
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ImageEntry.LogosTable.TABLE_NAME,
+                        columns,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             case TEXT:
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ImageEntry.TextTable.TABLE_NAME,
+                        columns,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             case SAFE:
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        ImageEntry.SafeTable.TABLE_NAME,
+                        columns,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

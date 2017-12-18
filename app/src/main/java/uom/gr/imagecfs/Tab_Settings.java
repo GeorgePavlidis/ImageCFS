@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
@@ -50,11 +52,21 @@ import uom.gr.imagecfs.data.ImageEntry;
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            if(getArguments().getInt(ARG_SECTION_NUMBER)==4) {
-                Cursor cursor = getActivity().getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
+            Cursor cursor;
+            if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
+                cursor = getActivity().getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID + "='" + imageUri.toString() + "'", null, null);
                 cursor.moveToFirst();
-                myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0);
-            }else if(getArguments().getInt(ARG_SECTION_NUMBER)==0) {
+                myArrayAdapter = new MyArrayAdapter(getActivity(), cursor, 0, ImageEntry.LabelTable.TABLE_NAME);
+            }
+            if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
+                cursor = getActivity().getContentResolver().query(ImageEntry.LogosTable.CONTENT_URI, null, ImageEntry.LogosTable.COLUMN_ID + "='" + imageUri.toString() + "'", null, null);
+                cursor.moveToFirst();
+                myArrayAdapter = new MyArrayAdapter(getActivity(), cursor, 0, ImageEntry.LogosTable.TABLE_NAME);
+            }
+            if(getArguments().getInt(ARG_SECTION_NUMBER)==1) {
+                 cursor = getActivity().getContentResolver().query(ImageEntry.TextTable.CONTENT_URI, null, ImageEntry.TextTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
+                cursor.moveToFirst();
+                myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0, ImageEntry.TextTable.TABLE_NAME);
             }
 
             View rootView = inflater.inflate(R.layout.fragment_item, container, false);
@@ -74,7 +86,7 @@ import uom.gr.imagecfs.data.ImageEntry;
 
 
         private  Uri imageUri;
-        private int TotalTabs=5;
+        private int TotalTabs=3;
         public SectionsPagerAdapter(FragmentManager fm, Uri img) {
             super(fm);
             setCount();

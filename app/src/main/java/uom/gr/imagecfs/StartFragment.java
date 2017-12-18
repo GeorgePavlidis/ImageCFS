@@ -35,7 +35,7 @@ public class StartFragment extends AppCompatActivity {
 
     ImageView imageView;
     TextView text;
-    Boolean flag;
+    Boolean flag=false;
     Boolean isOpen = false;
 
     private Uri imageUri;
@@ -59,13 +59,6 @@ public class StartFragment extends AppCompatActivity {
         FabRotateC= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise); //clockwise
         FabRotateA = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise); //anticlockwise
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent lol = new Intent(StartFragment.this, DetailsActivity.class);
-                startActivity(lol);
-            }
-        });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +132,6 @@ public class StartFragment extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             imageUri = data.getData();
-             //imageView.setImageURI(imageUri);
             try {
 
                   if(flag){

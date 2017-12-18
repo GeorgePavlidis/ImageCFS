@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -59,17 +60,10 @@ public class DetailsActivity extends AppCompatActivity {
         // primary sections of the activity.
 
 
-        Bitmap bitmap = null;
-        try {
-            bitmap = StartFragment.scaleBitmapDown (
-                    MediaStore.Images.Media.getBitmap(getContentResolver(),
-                    Uri.parse((String) getIntent().getSerializableExtra("image"))
-                    ), 1200);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Bitmap bitmap =  FetchResponseTask.bitmap;
         ImageView imageView = findViewById(R.id.imageView_toolbar);
         imageView.setImageBitmap(bitmap);
+
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
                                                              Uri.parse((String) getIntent().getSerializableExtra("image")));
