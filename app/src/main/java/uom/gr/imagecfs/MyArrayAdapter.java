@@ -122,19 +122,26 @@ public class MyArrayAdapter extends CursorAdapter {
     }
 
     private void face_list(ViewHolder viewHolder , Cursor cursor){
-        // Read score from cursor
-        Double scr = cursor.getDouble(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_SCORE))*100;
-        int score = scr.intValue();
-
-        // set the score text
-        viewHolder.score_txt.setText(  String.valueOf(score+"%"));
-
-        //set the bar progress
-        viewHolder.progressBar.setProgress(score);
+//        // Read score from cursor
+//        Double scr = cursor.getDouble(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_SCORE))*100;
+//        int score = scr.intValue();
+//        //set the bar progress
+//        viewHolder.progressBar.setProgress(score);
 
 
         // Read Description from cursor
-        String description = cursor.getString(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_DESCRIPTION));
+        String description = ImageEntry.FaceTable.COLUMN_ANGER_LIKELIHOOD + ": " +
+                            cursor.getString(cursor.getColumnIndex(ImageEntry.FaceTable.COLUMN_ANGER_LIKELIHOOD))
+                + "\n\n" + ImageEntry.FaceTable.COLUMN_BLURRED_LIKELIHOOD + ": " +
+                            cursor.getString(cursor.getColumnIndex(ImageEntry.FaceTable.COLUMN_BLURRED_LIKELIHOOD))
+                + "\n\n" + ImageEntry.FaceTable.COLUMN_JOY_LIKELIHOOD +": " +
+                            cursor.getString(cursor.getColumnIndex(ImageEntry.FaceTable.COLUMN_JOY_LIKELIHOOD))
+                + "\n\n" + ImageEntry.FaceTable.COLUMN_SORROW_LIKELIHOOD +": " +
+                            cursor.getString(cursor.getColumnIndex(ImageEntry.FaceTable.COLUMN_SORROW_LIKELIHOOD))
+                + "\n\n" + ImageEntry.FaceTable.COLUMN_SURPRISE_LIKELIHOOD + ": " +
+                            cursor.getString(cursor.getColumnIndex(ImageEntry.FaceTable.COLUMN_SURPRISE_LIKELIHOOD))
+                + "\n\n" + ImageEntry.FaceTable.COLUMN_HEADWEAR_LIKELIHOOD + ": " +
+                            cursor.getString(cursor.getColumnIndex(ImageEntry.FaceTable.COLUMN_HEADWEAR_LIKELIHOOD));
 
         // Find TextView and set formatted date on it
         viewHolder.description_txt.setText(description);

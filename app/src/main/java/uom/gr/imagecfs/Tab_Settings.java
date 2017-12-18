@@ -54,7 +54,7 @@ import uom.gr.imagecfs.data.ImageEntry;
                                  Bundle savedInstanceState) {
             Cursor cursor;
             if(getArguments().getInt(ARG_SECTION_NUMBER)==3) {
-                cursor = getActivity().getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID + "='" + imageUri.toString() + "'", null, null);
+                cursor = getActivity().getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID + "='" + imageUri.toString() + "'", null, ImageEntry.LabelTable.COLUMN_SCORE+" DESC");
                 cursor.moveToFirst();
                 myArrayAdapter = new MyArrayAdapter(getActivity(), cursor, 0, ImageEntry.LabelTable.TABLE_NAME);
             }
@@ -64,12 +64,13 @@ import uom.gr.imagecfs.data.ImageEntry;
                 myArrayAdapter = new MyArrayAdapter(getActivity(), cursor, 0, ImageEntry.LogosTable.TABLE_NAME);
             }
             if(getArguments().getInt(ARG_SECTION_NUMBER)==1) {
-                 cursor = getActivity().getContentResolver().query(ImageEntry.TextTable.CONTENT_URI, null, ImageEntry.TextTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
+                 cursor = getActivity().getContentResolver().query(ImageEntry.FaceTable.CONTENT_URI, null, ImageEntry.FaceTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
                 cursor.moveToFirst();
-                myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0, ImageEntry.TextTable.TABLE_NAME);
+                myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0, ImageEntry.FaceTable.TABLE_NAME);
             }
 
             View rootView = inflater.inflate(R.layout.fragment_item, container, false);
+
 
 
 

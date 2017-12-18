@@ -33,7 +33,7 @@ public class StartFragment extends AppCompatActivity {
     Animation FabRotateC; //clockwise
     Animation FabRotateA; //anticlockwise
 
-    ImageView imageView;
+   // ImageView imageView;
     TextView text;
     Boolean flag=false;
     Boolean isOpen = false;
@@ -46,7 +46,7 @@ public class StartFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        imageView = (ImageView)findViewById(R.id.imageView);
+        //imageView = (ImageView)findViewById(R.id.imageView);
         fab_FromGallery = (FloatingActionButton)findViewById(R.id.fab_gallery);
         fab_FromCamera = ( FloatingActionButton)findViewById(R.id.fab_camera);
         fab = (FloatingActionButton)findViewById((R.id.fabMain));
@@ -137,11 +137,9 @@ public class StartFragment extends AppCompatActivity {
                   if(flag){
                      Bitmap bitmap = scaleBitmapDown (MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri), 1200);
                       callCloudVision(bitmap);
-                      imageView.setImageBitmap(bitmap);
                   }else{
                     Bitmap bitmap = scaleBitmapDown((Bitmap)data.getExtras().get("data"),1200);
                       callCloudVision(bitmap);
-                      imageView.setImageBitmap(bitmap);
                   }
 
             } catch (IOException e) {
@@ -154,11 +152,19 @@ public class StartFragment extends AppCompatActivity {
         text.setText("Wait, loading...");
         FetchResponseTask imageTask =new FetchResponseTask(StartFragment.this, imageUri);
         imageTask.execute(bitmap);
+
     }
 
 
+    @Override
+    protected void onResume()
+    {
+        // TODO Auto-generated method stub
+        super.onResume();
 
 
+
+    }
 
     public static Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
 
