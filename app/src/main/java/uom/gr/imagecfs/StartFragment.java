@@ -2,6 +2,8 @@ package uom.gr.imagecfs;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,13 +34,15 @@ public class StartFragment extends AppCompatActivity {
     Animation FabClose;
     Animation FabRotateC; //clockwise
     Animation FabRotateA; //anticlockwise
+    AnimationDrawable loading_anim;
 
-   // ImageView imageView;
+    ImageView imageView;
     TextView text;
     Boolean flag=false;
     Boolean isOpen = false;
 
     private Uri imageUri;
+    private Bundle savedInstanceState;
 
 
     @Override
@@ -46,13 +50,13 @@ public class StartFragment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        //imageView = (ImageView)findViewById(R.id.imageView);
+        imageView = (ImageView)findViewById(R.id.imageView);
         fab_FromGallery = (FloatingActionButton)findViewById(R.id.fab_gallery);
         fab_FromCamera = ( FloatingActionButton)findViewById(R.id.fab_camera);
         fab = (FloatingActionButton)findViewById((R.id.fabMain));
 
         text = (TextView)findViewById(R.id.textlol);
-        text.setText("einai kuriaki kai ka8omai spt");
+        text.setVisibility(View.INVISIBLE);
 
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
@@ -87,6 +91,14 @@ public class StartFragment extends AppCompatActivity {
 
     }
 
+
+    private void loadingAction(){
+        if(imageView==null) throw  new AssertionError();
+        imageView.setBackgroundResource(R.drawable.loading_animatrion);
+
+        loading_anim = (AnimationDrawable) imageView.getBackground();
+        loading_anim.start();
+    }
 
     private void fabAction(Boolean isopen){
 
@@ -124,6 +136,7 @@ public class StartFragment extends AppCompatActivity {
             Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
             startActivityForResult(gallery, PICK_IMAGE);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
@@ -149,7 +162,11 @@ public class StartFragment extends AppCompatActivity {
     }
 
     private void callCloudVision(final Bitmap bitmap) throws IOException {
-        text.setText("Wait, loading...");
+        fab.setClickable(false);
+        fab.startAnimation(FabClose);
+        text.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.VISIBLE);
+        loadingAction();
         FetchResponseTask imageTask =new FetchResponseTask(StartFragment.this, imageUri);
         imageTask.execute(bitmap);
 
@@ -157,9 +174,29 @@ public class StartFragment extends AppCompatActivity {
 
 
     @Override
+    protected void onPause()
+    {
+
+        text.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.INVISIBLE);
+        if(loading_anim!=null && loading_anim.isRunning())    loading_anim.stop();
+
+        super.onPause();
+
+
+
+    }
+
+    @Override
     protected void onResume()
     {
-        // TODO Auto-generated method stub
+        Log.e("axxa"," outside");
+
+       if (!(loading_anim!=null && loading_anim.isRunning())) {
+           Log.e("axxa"," inside");
+           fab.setClickable(true);
+           fab.startAnimation(FabOpen);
+       }
         super.onResume();
 
 

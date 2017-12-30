@@ -15,23 +15,26 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="top|center"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:transitionName="theImage"
+        android:layout_marginTop="70dp"
         tools:layout_editor_absoluteX="-140dp" />
 
     <TextView
         android:id="@+id/textlol"
-        android:layout_width="match_parent"
+        android:text="@string/loading"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:fontFamily="casual"
+        android:layout_gravity="center|center"
+        android:layout_marginBottom="20dp"
+
 
         />
 
@@ -40,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:scaleType="center"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="20dp"
         android:src="@drawable/ic_action_name"
         android:elevation="6dp"
         android:transitionName="fab"
@@ -53,7 +56,7 @@
         android:layout_gravity="center|bottom"
         android:layout_marginRight="100dp"
         android:scaleType="center"
-        android:layout_marginBottom="180dp"
+        android:layout_marginBottom="80dp"
         android:src="@drawable/ic_camera"
         android:elevation="6dp"
         android:id="@+id/fab_camera"
@@ -69,7 +72,7 @@
         android:layout_gravity="center|bottom"
         android:layout_marginLeft="100dp"
         android:scaleType="center"
-        android:layout_marginBottom="180dp"
+        android:layout_marginBottom="80dp"
         android:src="@drawable/ic_gallery"
         android:elevation="6dp"
         android:id="@+id/fab_gallery"
