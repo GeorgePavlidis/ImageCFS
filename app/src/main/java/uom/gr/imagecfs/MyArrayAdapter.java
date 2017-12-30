@@ -174,7 +174,16 @@ public class MyArrayAdapter extends CursorAdapter {
     }
 
     private void safe_list(ViewHolder viewHolder , Cursor cursor){
-
+        String description = ImageEntry.SafeTable.COLUMN_ADULT + ": " +
+                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_ADULT ))
+                + "\n\n" + ImageEntry.SafeTable.COLUMN_VIOLENCE + ": " +
+                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_VIOLENCE))
+                + "\n\n" + ImageEntry.SafeTable.COLUMN_MEDICAL +": " +
+                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_MEDICAL))
+                + "\n\n" + ImageEntry.SafeTable.COLUMN_SPOOF+": " +
+                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_SPOOF));
+        // Find TextView and set formatted date on it
+        viewHolder.description_txt.setText(description);
     }
 
 

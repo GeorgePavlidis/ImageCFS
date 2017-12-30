@@ -190,10 +190,8 @@ public class StartFragment extends AppCompatActivity {
     @Override
     protected void onResume()
     {
-        Log.e("axxa"," outside");
 
        if (!(loading_anim!=null && loading_anim.isRunning())) {
-           Log.e("axxa"," inside");
            fab.setClickable(true);
            fab.startAnimation(FabOpen);
        }

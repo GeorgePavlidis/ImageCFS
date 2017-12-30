@@ -340,10 +340,14 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
         cursor.moveToFirst();
         for(int i=0;i<cursor.getCount();i++) {
             if (cursor.getCount() > 0) {
-                Log.e("test select",
-                        String.valueOf(cursor.getDouble(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_SCORE))
+                Log.e("test lololo",
+                        String.valueOf(cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_ADULT))
                                 + " " +
-                                cursor.getString(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_DESCRIPTION))));
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_MEDICAL))
+                                + " " +
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_SPOOF))
+                                + " " +
+                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_VIOLENCE))));
             }
             cursor.moveToNext();
         }

@@ -1,6 +1,7 @@
 package uom.gr.imagecfs;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,9 +17,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
+import uom.gr.imagecfs.data.ImageEntry;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -54,32 +59,71 @@ public class DetailsActivity extends AppCompatActivity {
 
 
 
-        Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar2);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-
-
         Bitmap bitmap =  FetchResponseTask.bitmap;
         ImageView imageView = findViewById(R.id.imageView_toolbar);
         imageView.setImageBitmap(bitmap);
 
 
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
-                                                             Uri.parse((String) getIntent().getSerializableExtra("image")));
+                                                             Uri.parse((String) getIntent().getSerializableExtra("image")),getTitles());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
+        tabLayout.setupWithViewPager(mViewPager);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
 
 
 
+    }
+
+
+    protected ArrayList<String> getTitles(){
+        Cursor cursor = getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, null, ImageEntry.ImageTable.COLUMN_URI + "='" +  getIntent().getSerializableExtra("image").toString() + "'", null, null);
+        cursor.moveToFirst();
+        ArrayList<String> title =new ArrayList<String>();
+        if (cursor.getCount() > 0) {
+            //LABEL
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_LABEL_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_LABEL_ID);
+            }
+            //FACE
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_FACE_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_FACE_ID);
+            }
+            //Landmark
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_LANDMARK_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_LANDMARK_ID);
+            }
+            //LOGO
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_LOGO_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_LOGO_ID);
+            }
+            //TYPE
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_TYPE_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_TYPE_ID);
+            }
+            //TEXT
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_TEXT_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_TEXT_ID);
+            }
+            //SAFE
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_SAFE_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_SAFE_ID);
+            }
+            //WEB
+            if(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_WEB_ID))!=null){
+                title.add(ImageEntry.ImageTable.COLUMN_WEB_ID);
+            }
+        }
+        cursor.close();
+        return title;
     }
 
 
