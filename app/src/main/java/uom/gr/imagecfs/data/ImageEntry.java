@@ -44,7 +44,7 @@ public class ImageEntry {
 
         public static final String COLUMN_TEXT_ID = "Text";
 
-        public static final String COLUMN_SAFE_ID = "Safe_search";
+        public static final String COLUMN_SAFE_ID = "Safe";
 
         public static final String COLUMN_WEB_ID = "WEB";
 

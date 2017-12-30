@@ -23,6 +23,7 @@ import android.widget.ListView;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import uom.gr.imagecfs.data.ImageEntry;
 
@@ -69,27 +70,28 @@ import uom.gr.imagecfs.data.ImageEntry;
         super.onViewCreated(view, savedInstanceState);
 
         Cursor cursor;
-        if(position==ImageEntry.LabelTable.TABLE_NAME) {
+        if(Objects.equals(position, ImageEntry.LabelTable.TABLE_NAME)) {
             cursor = getActivity().getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID + "='" + imageUri.toString() + "'", null, ImageEntry.LabelTable.COLUMN_SCORE+" DESC");
             cursor.moveToFirst();
             myArrayAdapter = new MyArrayAdapter(getActivity(), cursor, 0, ImageEntry.LabelTable.TABLE_NAME);
         }
-        if(position==ImageEntry.FaceTable.TABLE_NAME) {
+        if(Objects.equals(position, ImageEntry.FaceTable.TABLE_NAME)) {
             cursor = getActivity().getContentResolver().query(ImageEntry.FaceTable.CONTENT_URI, null, ImageEntry.FaceTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
             cursor.moveToFirst();
             myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0, ImageEntry.FaceTable.TABLE_NAME);
         }
-        if(position==ImageEntry.LogosTable.TABLE_NAME) {
+        if(Objects.equals(position, ImageEntry.LogosTable.TABLE_NAME)) {
             cursor = getActivity().getContentResolver().query(ImageEntry.LogosTable.CONTENT_URI, null, ImageEntry.LogosTable.COLUMN_ID + "='" + imageUri.toString() + "'", null, null);
             cursor.moveToFirst();
             myArrayAdapter = new MyArrayAdapter(getActivity(), cursor, 0, ImageEntry.LogosTable.TABLE_NAME);
         }
-        if(position==ImageEntry.TextTable.TABLE_NAME) {
+        if(Objects.equals(position, ImageEntry.TextTable.TABLE_NAME)) {
             cursor = getActivity().getContentResolver().query(ImageEntry.TextTable.CONTENT_URI, null, ImageEntry.TextTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
             cursor.moveToFirst();
             myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0, ImageEntry.TextTable.TABLE_NAME);
         }
-        if(position==ImageEntry.SafeTable.TABLE_NAME) {
+        if(Objects.equals(position, ImageEntry.SafeTable.TABLE_NAME)) {
+            Log.e("hmmm","kalos ta paidia ");
             cursor = getActivity().getContentResolver().query(ImageEntry.SafeTable.CONTENT_URI, null, ImageEntry.SafeTable.COLUMN_ID+"='"+imageUri.toString()+"'", null, null);
             cursor.moveToFirst();
             myArrayAdapter = new MyArrayAdapter(getActivity(),cursor,0, ImageEntry.SafeTable.TABLE_NAME);

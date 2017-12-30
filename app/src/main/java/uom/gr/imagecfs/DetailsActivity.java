@@ -68,6 +68,7 @@ public class DetailsActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(),
                                                              Uri.parse((String) getIntent().getSerializableExtra("image")),getTitles());
 
+
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -123,6 +124,9 @@ public class DetailsActivity extends AppCompatActivity {
             }
         }
         cursor.close();
+        Log.e("title", title.toString());
+        Log.e("title", ImageEntry.SafeTable.TABLE_NAME);
+
         return title;
     }
 

@@ -337,21 +337,21 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
         Cursor cursor = mContext.getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, null, ImageEntry.LabelTable.COLUMN_ID+"= '"+imageUri.toString()+"'", null, null);
 
 
-        cursor.moveToFirst();
-        for(int i=0;i<cursor.getCount();i++) {
-            if (cursor.getCount() > 0) {
-                Log.e("test lololo",
-                        String.valueOf(cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_ADULT))
-                                + " " +
-                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_MEDICAL))
-                                + " " +
-                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_SPOOF))
-                                + " " +
-                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_VIOLENCE))));
-            }
-            cursor.moveToNext();
-        }
-        cursor.close();
+//        cursor.moveToFirst();
+//        for(int i=0;i<cursor.getCount();i++) {
+//            if (cursor.getCount() > 0) {
+//                Log.e("test lololo",
+//                        String.valueOf(cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_ADULT))
+//                                + " " +
+//                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_MEDICAL))
+//                                + " " +
+//                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_SPOOF))
+//                                + " " +
+//                                cursor.getString(cursor.getColumnIndex(ImageEntry.SafeTable.COLUMN_VIOLENCE))));
+//            }
+//            cursor.moveToNext();
+//        }
+//        cursor.close();
         try {
             Log.e("test insert",m.getLastPathSegment());
         }catch (Exception e){
