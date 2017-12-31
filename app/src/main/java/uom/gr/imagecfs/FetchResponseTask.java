@@ -50,7 +50,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
     private static final String CLOUD_VISION_API_KEY = "AIzaSyCRZqKBmSkyl_sGNQh2eM6uLX1ISVmyov0";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = FetchResponseTask.class.getSimpleName();
 
     public FetchResponseTask(Context context, Uri imageUri) {
         mContext = context;

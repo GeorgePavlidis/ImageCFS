@@ -3,11 +3,8 @@ package uom.gr.imagecfs;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -17,8 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.support.v7.widget.ShareActionProvider;
 
@@ -32,15 +27,6 @@ public class DetailsActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ShareActionProvider mShareActionProvider=null;
-    FloatingActionButton fab_FromGallery;
-    FloatingActionButton fab_FromCamera;
-    FloatingActionButton fab;
-
-    Animation FabOpen;
-    Animation FabClose;
-    Animation FabRotateC; //clockwise
-    Animation FabRotateA; //anticlockwise
-    Boolean isOpen = false;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -56,44 +42,6 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        fab_FromGallery = (FloatingActionButton)findViewById(R.id.fab_gallery);
-        fab_FromCamera = ( FloatingActionButton)findViewById(R.id.fab_camera);
-        fab = (FloatingActionButton)findViewById((R.id.fabMain));
-
-
-        FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
-        FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
-        FabRotateC= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise); //clockwise
-        FabRotateA = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise); //anticlockwise
-
-
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fabAction(isOpen);
-
-            }
-        });
-
-//        fab_FromGallery.setOnClickListener( new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                openGallery();
-//            }
-//        });
-//
-//
-//        fab_FromCamera.setOnClickListener( new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                openCamera();
-//            }
-//        });
-
 
 
         Bitmap bitmap =  FetchResponseTask.bitmap;
@@ -177,26 +125,6 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
 
-    private void fabAction(Boolean isopen) {
-
-        if (isopen) {
-            fab_FromCamera.startAnimation(FabClose);
-            fab_FromGallery.startAnimation(FabClose);
-            fab.startAnimation(FabRotateA);
-            fab_FromGallery.setClickable(false);
-            fab_FromCamera.setClickable(false);
-            isOpen = false;
-
-        } else {
-            fab_FromCamera.startAnimation(FabOpen);
-            fab_FromGallery.startAnimation(FabOpen);
-            fab.startAnimation(FabRotateC);
-            fab_FromGallery.setClickable(true);
-            fab_FromCamera.setClickable(true);
-            isOpen = true;
-        }
-
-    }
 
         @Override
     public boolean onCreateOptionsMenu(Menu menu) {

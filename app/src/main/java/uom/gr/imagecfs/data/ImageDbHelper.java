@@ -155,7 +155,7 @@ public class ImageDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        Log.e("onUpg","Failed to insert row into ");
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.ImageTable.TABLE_NAME_IMAGE);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.LabelTable.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ImageEntry.LogosTable.TABLE_NAME);

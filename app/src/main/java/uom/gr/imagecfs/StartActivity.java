@@ -3,13 +3,14 @@ package uom.gr.imagecfs;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,10 +19,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-import uom.gr.imagecfs.data.ImageEntry;
 
-
-public class StartFragment extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE = 100;
 
@@ -168,7 +167,7 @@ public class StartFragment extends AppCompatActivity {
         text.setVisibility(View.VISIBLE);
         imageView.setVisibility(View.VISIBLE);
         loadingAction();
-        FetchResponseTask imageTask =new FetchResponseTask(StartFragment.this, imageUri);
+        FetchResponseTask imageTask =new FetchResponseTask(StartActivity.this, imageUri);
         imageTask.execute(bitmap);
 
     }
@@ -202,7 +201,33 @@ public class StartFragment extends AppCompatActivity {
 
     }
 
-    public static Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_start, menu);
+
+        MenuItem item = menu.findItem(R.id.action_settings);
+        return true;
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent lol = new Intent(StartActivity.this,SettingsActivity.class);
+                startActivity(lol);
+                return true;
+            case R.id.scan:
+                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
+                startActivity(sca);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+        public static Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
 
         int originalWidth = bitmap.getWidth();
         int originalHeight = bitmap.getHeight();

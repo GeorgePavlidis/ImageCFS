@@ -65,6 +65,7 @@ public class ImageProvider extends ContentProvider {
 
        Cursor lol =  mOpenHelper.getReadableDatabase().rawQuery("SELECT  COUNT(*) FROM "+ ImageEntry.ImageTable.TABLE_NAME_IMAGE,null);
 
+
         switch (match) {
             case IMAGE:
                 retCursor = mOpenHelper.getReadableDatabase().query(
@@ -232,7 +233,18 @@ public class ImageProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
+    public int delete(@NonNull Uri uri, @Nullable String image_id, @Nullable String[] strings) {
+        if(uri!=ImageEntry.ImageTable.CONTENT_URI){
+            reset();
+        }else{
+            final SQLiteDatabase sqLiteDatabase =mOpenHelper.getWritableDatabase();
+            sqLiteDatabase.delete(ImageEntry.ImageTable.TABLE_NAME_IMAGE,ImageEntry.ImageTable.COLUMN_URI+ "=" +image_id +";",null);
+            sqLiteDatabase.delete(ImageEntry.LabelTable.TABLE_NAME,ImageEntry.LabelTable.COLUMN_ID+ "='" + image_id+"';",null);
+            sqLiteDatabase.delete(ImageEntry.FaceTable.TABLE_NAME,ImageEntry.FaceTable.COLUMN_ID+ "='" + image_id+"';",null);
+            sqLiteDatabase.delete(ImageEntry.LogosTable.TABLE_NAME,ImageEntry.LogosTable.COLUMN_ID+ "='" + image_id+"';",null);
+            sqLiteDatabase.delete(ImageEntry.TextTable.TABLE_NAME,ImageEntry.TextTable.COLUMN_ID+ "='" + image_id+"';",null);
+            sqLiteDatabase.delete(ImageEntry.SafeTable.TABLE_NAME,ImageEntry.SafeTable.COLUMN_ID+ "='" + image_id+"';",null);
+        }
         return 0;
     }
 
@@ -240,4 +252,16 @@ public class ImageProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
         return 0;
     }
+
+    public boolean reset(){
+        final SQLiteDatabase sqLiteDatabase =mOpenHelper.getWritableDatabase();
+        sqLiteDatabase.execSQL("DELETE FROM " + ImageEntry.ImageTable.TABLE_NAME_IMAGE);
+        sqLiteDatabase.execSQL("DELETE FROM " + ImageEntry.LabelTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DELETE FROM " + ImageEntry.LogosTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DELETE FROM " + ImageEntry.TextTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DELETE FROM " + ImageEntry.SafeTable.TABLE_NAME);
+        sqLiteDatabase.execSQL("DELETE FROM " + ImageEntry.FaceTable.TABLE_NAME);
+        return true;
+    }
+
 }
