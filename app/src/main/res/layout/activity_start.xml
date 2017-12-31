@@ -38,47 +38,6 @@
 
         />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:scaleType="center"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/ic_action_name"
-        android:elevation="6dp"
-        android:transitionName="fab"
-        android:id="@+id/fabMain"
-        app:backgroundTint="@color/fab1"
-        />
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:layout_marginRight="100dp"
-        android:scaleType="center"
-        android:layout_marginBottom="80dp"
-        android:src="@drawable/ic_camera"
-        android:elevation="6dp"
-        android:id="@+id/fab_camera"
-        app:backgroundTint="@color/fab2"
-        android:visibility="invisible"
-        />
-
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
-        android:layout_marginLeft="100dp"
-        android:scaleType="center"
-        android:layout_marginBottom="80dp"
-        android:src="@drawable/ic_gallery"
-        android:elevation="6dp"
-        android:id="@+id/fab_gallery"
-        app:backgroundTint="@color/fab2"
-        android:visibility="invisible"
-
-        />
+    <include layout="@layout/fab_buttons" />
 
 </android.support.design.widget.CoordinatorLayout>

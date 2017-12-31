@@ -55,14 +55,15 @@ public class StartFragment extends AppCompatActivity {
         fab_FromCamera = ( FloatingActionButton)findViewById(R.id.fab_camera);
         fab = (FloatingActionButton)findViewById((R.id.fabMain));
 
-        text = (TextView)findViewById(R.id.textlol);
-        text.setVisibility(View.INVISIBLE);
 
         FabOpen= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
         FabClose= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         FabRotateC= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise); //clockwise
         FabRotateA = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anticlockwise); //anticlockwise
 
+
+        text = (TextView)findViewById(R.id.textlol);
+        text.setVisibility(View.INVISIBLE);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +93,7 @@ public class StartFragment extends AppCompatActivity {
     }
 
 
-    private void loadingAction(){
+    public void loadingAction(){
         if(imageView==null) throw  new AssertionError();
         imageView.setBackgroundResource(R.drawable.loading_animatrion);
 
@@ -122,7 +123,7 @@ public class StartFragment extends AppCompatActivity {
         }
     }
 
-    private void openCamera() {
+    public void openCamera() {
         fabAction(true);// close the buttons
         flag=false;
         Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

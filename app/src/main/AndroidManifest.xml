@@ -24,21 +24,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StartFragment"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".StartFragment"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DetailsActivity"
             android:label="@string/title_activity_detail_"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Tab_Settings"
-            android:label="@string/title_activity_main3"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <provider
-            android:authorities="@string/content_authority"
             android:name=".data.ImageProvider"
+            android:authorities="@string/content_authority"
             android:exported="false"
             android:syncable="true" />
+
+        <activity android:name=".ImageFullScreen"
+            android:label="@string/title_activity_detail_"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
     </application>
 
 </manifest>
