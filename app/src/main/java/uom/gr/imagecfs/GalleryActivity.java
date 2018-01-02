@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -46,25 +47,7 @@ public class GalleryActivity extends AppCompatActivity {
             }
         }
         cursor.close();
-        int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE =123;
 
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (shouldShowRequestPermissionRationale(
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Explain to the user why we need to read the contacts
-            }
-
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
-            // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
-            // app-defined int constant that should be quite unique
-
-
-        }
 
 
 
@@ -84,40 +67,4 @@ public class GalleryActivity extends AppCompatActivity {
 
 
 
-    private ArrayList<String> getImages(){
-        ArrayList<String> imagesUri = new ArrayList<String>();
-        // which image properties are we querying
-        String[] projection = new String[] {
-                MediaStore.Images.Media._ID
-        };
-
-// content:// style URI for the "primary" external storage volume
-        Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-// Make the query.
-        Cursor cur = managedQuery(images,
-                projection, // Which columns to return
-                null,       // Which rows to return (all rows)
-                null,       // Selection arguments (none)
-                MediaStore.Images.Media.DATE_TAKEN+" DESC"       // Ordering
-        );
-
-        if (cur.moveToFirst()) {
-
-            String dataUri;
-
-
-            do {
-                // Get the field values
-                dataUri ="content://media/external/images/media/"+ cur.getString(cur.getColumnIndex(
-                        MediaStore.Images.Media._ID));
-                imagesUri.add(dataUri);
-                // Do something with the values.
-                Log.i("ListingImages",
-                         "  date_taken=" + dataUri);
-            } while (cur.moveToNext());
-
-        }
-        return imagesUri;
-    }
 }

@@ -45,6 +45,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
     private final Context mContext;
     private final Uri imageUri;
     public static Bitmap bitmap;
+    private final boolean onlyScan;
     private static final int PICK_IMAGE = 100;
     public static final String FILE_NAME = "temp.jpg";
     private static final String CLOUD_VISION_API_KEY = "AIzaSyCRZqKBmSkyl_sGNQh2eM6uLX1ISVmyov0";
@@ -52,7 +53,8 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
     private static final String TAG = FetchResponseTask.class.getSimpleName();
 
-    public FetchResponseTask(Context context, Uri imageUri) {
+    public FetchResponseTask(Context context, Uri imageUri, boolean onlyScan) {
+        this.onlyScan=onlyScan;
         mContext = context;
         this.imageUri = imageUri;
     }
@@ -60,6 +62,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
             @Override
             protected String doInBackground(final Bitmap...params) {
                 bitmap=params[0];
+                Log.i("Scan Gallery", imageUri.toString());
                 Cursor image = mContext.getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, null, ImageEntry.ImageTable.COLUMN_URI + "= '" + imageUri.toString() + "'", null, null);
                 image.moveToFirst();
                 Log.i("image",imageUri.toString());
@@ -211,12 +214,14 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
             }
         }
             cursor.moveToNext();
+        if(!onlyScan){
+            Intent lol = new Intent( mContext, DetailsActivity.class);
+            lol.putExtra("image",imageUri.toString());
+            //lol.putExtra("bitmap",bitmap);
+            mContext.startActivity(lol);
+            Log.e(TAG, "The Result is " + result);
+        }
 
-        Intent lol = new Intent( mContext, DetailsActivity.class);
-        lol.putExtra("image",imageUri.toString());
-        //lol.putExtra("bitmap",bitmap);
-        mContext.startActivity(lol);
-        Log.e(TAG, "The Result is " + result);
 
     }
 

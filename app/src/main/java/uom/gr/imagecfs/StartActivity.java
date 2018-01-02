@@ -1,9 +1,13 @@
 package uom.gr.imagecfs;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -17,10 +21,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class StartActivity extends AppCompatActivity {
@@ -206,7 +212,7 @@ public class StartActivity extends AppCompatActivity {
         text.setVisibility(View.VISIBLE);
         imageView.setVisibility(View.VISIBLE);
         loadingAction();
-        FetchResponseTask imageTask =new FetchResponseTask(StartActivity.this, imageUri);
+        FetchResponseTask imageTask =new FetchResponseTask(StartActivity.this, imageUri,false);
         imageTask.execute(bitmap);
 
     }
@@ -249,9 +255,89 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+    private void scan(ArrayList<String> list) {
+        for (int i=0;i<list.size();i++) {
+            String uri = list.get(i);
+            Bitmap bitmap = null;
+            try {
+                bitmap = scaleBitmapDown(MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(uri)), 1200);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            FetchResponseTask imageTask = new FetchResponseTask(StartActivity.this, Uri.parse(uri), true);
+            if(i/5==0){
+                AsyncTask<Bitmap, Void, String> hm = imageTask.execute(bitmap);
+            }else{
+                imageTask.execute(bitmap);
+            }
+            Log.i("Scan Gallery", uri+" done..");
+
+        }
+    }
+
+
+        private ArrayList<String> getImages(){
+            ArrayList<String> imagesUri = new ArrayList<String>();
+            // which image properties are we querying
+            String[] projection = new String[] {
+                    MediaStore.Images.Media._ID
+            };
+
+// content:// style URI for the "primary" external storage volume
+            Uri images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+// Make the query.
+            Cursor cur = managedQuery(images,
+                    projection, // Which columns to return
+                    null,       // Which rows to return (all rows)
+                    null,       // Selection arguments (none)
+                    MediaStore.Images.Media.DATE_TAKEN+" DESC"       // Ordering
+            );
+
+            if (cur.moveToFirst()) {
+
+                String dataUri;
+
+
+                do {
+                    // Get the field values
+                    dataUri ="content://media/external/images/media/"+ cur.getString(cur.getColumnIndex(
+                            MediaStore.Images.Media._ID));
+                    imagesUri.add(dataUri);
+                    // Do something with the values.
+//                    Log.i("ListingImages",
+//                            "  date_taken=" + dataUri);
+                } while (cur.moveToNext());
+
+            }
+            return imagesUri;
+        }
+
+
+
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_start, menu);
+        int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE =123;
+
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Explain to the user why we need to read the contacts
+            }
+
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+            // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an
+            // app-defined int constant that should be quite unique
+
+
+        }
 
         MenuItem item = menu.findItem(R.id.search2);
        // searchView.setMenuItem(item);
@@ -267,10 +353,14 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(lol);
                 return true;
             case R.id.scan:
-                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
-                startActivity(sca);
+                scan(getImages());
+                Toast.makeText(StartActivity.this, "DONE!!!! XD" ,
+                        Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.search2:
+                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
+
+                startActivity(sca);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
