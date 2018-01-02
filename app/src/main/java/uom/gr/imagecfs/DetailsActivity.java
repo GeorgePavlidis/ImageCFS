@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.support.v7.widget.ShareActionProvider;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import uom.gr.imagecfs.data.ImageEntry;
@@ -46,13 +48,28 @@ public class DetailsActivity extends AppCompatActivity {
 
         Bitmap bitmap =  FetchResponseTask.bitmap;
         ImageView imageView = findViewById(R.id.imageView_toolbar);
-        imageView.setImageBitmap(bitmap);
+        final Intent lol = new Intent(DetailsActivity.this,ImageFullScreen.class);
+
+        try {
+            if(StartActivity.scaleBitmapDown (MediaStore.Images.Media.getBitmap(getContentResolver(),
+                    Uri.parse((String) getIntent().getSerializableExtra("image"))), 1200) == bitmap){
+                imageView.setImageBitmap(bitmap);
+                lol.putExtra("image", (Bundle) null);
+            }else{
+                String uri =  (String) getIntent().getSerializableExtra("image");
+                imageView.setImageURI(Uri.parse((String) getIntent().getSerializableExtra("image")));
+                lol.putExtra("image",uri);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.e("onShareTargetSelected", "eimai o pio gamatos ston kosmo ");
-                Intent lol = new Intent(DetailsActivity.this,ImageFullScreen.class);
                 startActivity(lol);
             }
         });

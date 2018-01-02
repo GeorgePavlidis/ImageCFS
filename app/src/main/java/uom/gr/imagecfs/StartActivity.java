@@ -16,6 +16,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.IOException;
 
@@ -40,8 +43,10 @@ public class StartActivity extends AppCompatActivity {
     Boolean flag=false;
     Boolean isOpen = false;
 
+    MaterialSearchView searchView;
+    Toolbar toolbar;
+
     private Uri imageUri;
-    private Bundle savedInstanceState;
 
 
     @Override
@@ -88,6 +93,40 @@ public class StartActivity extends AppCompatActivity {
                 openCamera();
             }
         });
+
+
+
+
+//        MaterialSearchView searchView = (MaterialSearchView) findViewById(R.id.se_gamaw);
+//        toolbar = (Toolbar)findViewById(R.id.toolbar_start);
+//        setSupportActionBar(toolbar);
+//        searchView.setCursorDrawable(R.drawable.color_cursor_white);
+//       // searchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
+//        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                //Do some magic
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                //Do some magic
+//                return false;
+//            }
+//        });
+//
+//        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+//            @Override
+//            public void onSearchViewShown() {
+//                //Do some magic
+//            }
+//
+//            @Override
+//            public void onSearchViewClosed() {
+//                //Do some magic
+//            }
+//        });
 
     }
 
@@ -201,11 +240,21 @@ public class StartActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (searchView.isSearchOpen()) {
+            searchView.closeSearch();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_start, menu);
 
-        MenuItem item = menu.findItem(R.id.action_settings);
+        MenuItem item = menu.findItem(R.id.search2);
+       // searchView.setMenuItem(item);
         return true;
     }
 
@@ -220,6 +269,8 @@ public class StartActivity extends AppCompatActivity {
             case R.id.scan:
                 Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
                 startActivity(sca);
+                return true;
+            case R.id.search2:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

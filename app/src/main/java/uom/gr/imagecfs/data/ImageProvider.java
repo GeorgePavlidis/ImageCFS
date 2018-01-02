@@ -63,8 +63,13 @@ public class ImageProvider extends ContentProvider {
         Cursor retCursor = null;
         final int match = sUriMatcher.match(uri);
 
-       Cursor lol =  mOpenHelper.getReadableDatabase().rawQuery("SELECT  COUNT(*) FROM "+ ImageEntry.ImageTable.TABLE_NAME_IMAGE,null);
-
+//       Cursor lol =  mOpenHelper.getReadableDatabase().rawQuery("SELECT "+ ImageEntry.ImageTable.COLUMN_URI+" FROM "+ ImageEntry.ImageTable.TABLE_NAME_IMAGE,null);
+//        lol.moveToFirst();
+//        for(int i=0;i<lol.getCount();i++) {
+//            if (lol.getCount() > 0) {
+//                Log.e("aaaxxxaa",lol.getString(lol.getColumnIndex(ImageEntry.ImageTable.COLUMN_URI)));;
+//            }
+//        }
 
         switch (match) {
             case IMAGE:
