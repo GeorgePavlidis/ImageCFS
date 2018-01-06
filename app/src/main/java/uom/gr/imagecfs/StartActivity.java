@@ -1,6 +1,7 @@
 package uom.gr.imagecfs;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -109,39 +111,42 @@ public class StartActivity extends AppCompatActivity {
         });
 
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
-//        MaterialSearchView searchView = (MaterialSearchView) findViewById(R.id.se_gamaw);
-//        toolbar = (Toolbar)findViewById(R.id.toolbar_start);
-//        setSupportActionBar(toolbar);
-//        searchView.setCursorDrawable(R.drawable.color_cursor_white);
-//       // searchView.setSuggestions(getResources().getStringArray(R.array.query_suggestions));
-//        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                //Do some magic
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                //Do some magic
-//                return false;
-//            }
-//        });
-//
-//        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-//            @Override
-//            public void onSearchViewShown() {
-//                //Do some magic
-//            }
-//
-//            @Override
-//            public void onSearchViewClosed() {
-//                //Do some magic
-//            }
-//        });
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setEllipsize(true);
+        searchView.setVoiceSearch(false);
+        searchView.setCursorDrawable(R.drawable.color_cursor_white);
 
+        searchView.setSuggestions(getAllLabels());
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Snackbar.make(findViewById(R.id.startFragment), "Query: " + query, Snackbar.LENGTH_LONG)
+                        .show();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //Do some magic
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //Do some magic
+            }
+        });
     }
 
 
@@ -193,7 +198,6 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        Log.e("WeatherJsonParser", String.valueOf(resultCode == RESULT_OK));
 
 
         if (resultCode == RESULT_OK) {
@@ -280,7 +284,7 @@ public class StartActivity extends AppCompatActivity {
 
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dialog.setMessage("scaning the gallery..");
+        dialog.setMessage("scan the gallery..");
         dialog.setMax(6);
         dialog.setProgress(0);
         dialog.setCancelable(false);
@@ -419,6 +423,26 @@ public class StartActivity extends AppCompatActivity {
     }
 
 
+    public String[] getAllLabels(){
+        Cursor cursor = getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, new String[]{"DISTINCT "+ImageEntry.LabelTable.COLUMN_DESCRIPTION}, null, null, null);
+        cursor.moveToFirst();
+
+        String[] labels = new String[cursor.getCount()];
+        for(int i=0;i<cursor.getCount();i++) {
+            if (cursor.getCount() > 0) {
+                labels[i] =cursor.getString(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_DESCRIPTION));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+
+
+      Log.i("Scan ", String.valueOf(labels));
+
+        return labels;
+    }
+
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -444,7 +468,7 @@ public class StartActivity extends AppCompatActivity {
         }
 
         MenuItem item = menu.findItem(R.id.search2);
-       // searchView.setMenuItem(item);
+        searchView.setMenuItem(item);
         return true;
     }
 
@@ -457,14 +481,24 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(lol);
                 return true;
             case R.id.scan:
-                scan(getImages());
-                Toast.makeText(StartActivity.this, "DONE!!!! XD" ,
-                        Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(this)
+                        .setTitle("Are you using wifi ?")
+                        .setMessage("make sure you are using wifi, scanning may cost several megabytes")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                scan(getImages());
+                                Toast.makeText(StartActivity.this, "DONE!!!! XD" ,
+                                        Toast.LENGTH_SHORT).show();
+                            }})
+                        .setNegativeButton(R.string.no, null).show();
+
                 return true;
             case R.id.search2:
-                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
-
-                startActivity(sca);
+//                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
+//
+//                startActivity(sca);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

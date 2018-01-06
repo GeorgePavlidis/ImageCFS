@@ -239,11 +239,12 @@ public class ImageProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String image_id, @Nullable String[] strings) {
-        if(uri!=ImageEntry.ImageTable.CONTENT_URI){
+        Uri aha = ImageEntry.ImageTable.CONTENT_URI;
+        if(!uri.equals(ImageEntry.ImageTable.CONTENT_URI)){
             reset();
         }else{
             final SQLiteDatabase sqLiteDatabase =mOpenHelper.getWritableDatabase();
-            sqLiteDatabase.delete(ImageEntry.ImageTable.TABLE_NAME_IMAGE,ImageEntry.ImageTable.COLUMN_URI+ "=" +image_id +";",null);
+            sqLiteDatabase.delete(ImageEntry.ImageTable.TABLE_NAME_IMAGE,ImageEntry.ImageTable.COLUMN_URI+ "='" +image_id +"';",null);
             sqLiteDatabase.delete(ImageEntry.LabelTable.TABLE_NAME,ImageEntry.LabelTable.COLUMN_ID+ "='" + image_id+"';",null);
             sqLiteDatabase.delete(ImageEntry.FaceTable.TABLE_NAME,ImageEntry.FaceTable.COLUMN_ID+ "='" + image_id+"';",null);
             sqLiteDatabase.delete(ImageEntry.LogosTable.TABLE_NAME,ImageEntry.LogosTable.COLUMN_ID+ "='" + image_id+"';",null);

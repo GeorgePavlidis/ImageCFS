@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingLeft="@dimen/fab_margin_right"
-    android:paddingRight="@dimen/fab_margin_right"
-    android:paddingTop="@dimen/activity_horizontal_margin"
     android:id="@+id/startFragment"
     tools:context="uom.gr.imagecfs.StartActivity">
+    <!--android:paddingBottom="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingLeft="@dimen/fab_margin_right"-->
+    <!--android:paddingRight="@dimen/fab_margin_right"-->
+    <!--android:paddingTop="@dimen/activity_horizontal_margin"-->
 
 
     <ImageView
@@ -23,22 +23,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:transitionName="theImage"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="150dp"
         tools:layout_editor_absoluteX="-140dp" />
-
 
     <TextView
         android:id="@+id/textlol"
-        android:text="@string/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="casual"
         android:layout_gravity="center|center"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="-40dp"
+        android:fontFamily="casual"
+        android:text="@string/loading"
 
 
         />
 
     <include layout="@layout/fab_buttons" />
+
+
+    <FrameLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            />
+
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </FrameLayout>
+
 
 </FrameLayout>
