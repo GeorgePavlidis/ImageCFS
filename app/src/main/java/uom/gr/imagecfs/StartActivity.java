@@ -1,6 +1,10 @@
 package uom.gr.imagecfs;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -11,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -27,6 +32,8 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import uom.gr.imagecfs.data.ImageEntry;
 
 
 public class StartActivity extends AppCompatActivity {
@@ -45,6 +52,7 @@ public class StartActivity extends AppCompatActivity {
     AnimationDrawable loading_anim;
 
     ImageView imageView;
+    ImageView background;
     TextView text;
     Boolean flag=false;
     Boolean isOpen = false;
@@ -236,7 +244,7 @@ public class StartActivity extends AppCompatActivity {
     protected void onResume()
     {
 
-       if (!(loading_anim!=null && loading_anim.isRunning())) {
+        if (!(loading_anim!=null && loading_anim.isRunning())) {
            fab.setClickable(true);
            fab.startAnimation(FabOpen);
        }
@@ -255,24 +263,105 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-    private void scan(ArrayList<String> list) {
-        for (int i=0;i<list.size();i++) {
-            String uri = list.get(i);
-            Bitmap bitmap = null;
-            try {
-                bitmap = scaleBitmapDown(MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(uri)), 1200);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            FetchResponseTask imageTask = new FetchResponseTask(StartActivity.this, Uri.parse(uri), true);
-            if(i/5==0){
-                AsyncTask<Bitmap, Void, String> hm = imageTask.execute(bitmap);
-            }else{
-                imageTask.execute(bitmap);
-            }
-            Log.i("Scan Gallery", uri+" done..");
+    private void scan(final ArrayList<String> list) {
+        final boolean[] run = {true};
+       final ArrayList<String> saved = getSavedImages();
 
-        }
+       final int max = 6;//list.size();
+
+
+
+        final NotificationManager mNotifyManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setContentTitle("Picture scan")
+                .setContentText("scan in progress")
+                .setSmallIcon(R.drawable.scan);
+
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setMessage("scaning the gallery..");
+        dialog.setMax(6);
+        dialog.setProgress(0);
+        dialog.setCancelable(false);
+
+
+
+
+
+
+        final Thread t = new Thread() {
+            @Override
+            public void run() {
+                mBuilder.setProgress(max, 0, false);
+                mNotifyManager.notify(0, mBuilder.build());
+                for (int i=0;i<max;i++) {
+                    String uri = list.get(i);
+                    Bitmap bitmap = null;
+                    if(saved.contains(uri)){
+                        saved.remove(uri);
+                        mBuilder.setProgress(max, i, false);
+                        dialog.setProgress(i);
+                        continue;
+                    }
+                    try {
+                        bitmap = scaleBitmapDown(MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(uri)), 1200);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    FetchResponseTask imageTask = new FetchResponseTask(StartActivity.this, Uri.parse(uri), true);
+
+                    AsyncTask<Bitmap, Void, String> hm = imageTask.execute(bitmap);
+                    while (true) {
+                        Log.i("Scan ", String.valueOf(hm.getStatus())+" "+i);
+
+                        if(hm.getStatus() == AsyncTask.Status.FINISHED  ||  !run[0]){
+                            mBuilder.setProgress(max, i+1, false);
+                            // Displays the progress bar for the first time.
+                            mNotifyManager.notify(0, mBuilder.build());
+                            dialog.setProgress(i+1);
+                            break;
+                        }
+                    }
+                    if(!run[0]){
+                        break;
+                    }
+                }
+
+                if(saved.size()>0){
+                    for(String uri: saved){
+                        getContentResolver().delete(ImageEntry.ImageTable.CONTENT_URI, uri,null);
+                    }
+                }
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                // When the loop is finished, updates the notification
+                mBuilder.setContentText("Scan complete")
+                        // Removes the progress bar
+                        .setProgress(0,0,false);
+                mNotifyManager.notify(0, mBuilder.build());
+            }
+        };
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // When the loop is finished, updates the notification
+                mBuilder.setContentText("Scan stoped")
+                        // Removes the progress bar
+                        .setProgress(0,0,false);
+                mNotifyManager.notify(0, mBuilder.build());
+                dialog.dismiss();
+                run[0] =false;
+
+            }
+        });
+        dialog.show();
+
+        t.start();
+
+
     }
 
 
@@ -313,6 +402,21 @@ public class StartActivity extends AppCompatActivity {
             return imagesUri;
         }
 
+    public  ArrayList<String> getSavedImages (){
+        ArrayList<String> myImages =new ArrayList<>();
+        Cursor cursor = getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, new String[]{ImageEntry.ImageTable.COLUMN_URI}, null, null, null);
+        cursor.moveToFirst();
+
+        for(int i=0;i<cursor.getCount();i++) {
+            if (cursor.getCount() > 0) {
+                myImages.add(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_URI)));
+                cursor.moveToNext();
+            }
+        }
+        cursor.close();
+
+        return myImages;
+    }
 
 
 

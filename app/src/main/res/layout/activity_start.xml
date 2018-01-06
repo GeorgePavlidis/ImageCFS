@@ -26,6 +26,7 @@
         android:layout_marginTop="70dp"
         tools:layout_editor_absoluteX="-140dp" />
 
+
     <TextView
         android:id="@+id/textlol"
         android:text="@string/loading"
