@@ -142,7 +142,7 @@ public class MyArrayAdapter extends CursorAdapter {
         //set the bar progress
 
         // Read Description from cursor
-        String description = cursor.getString(cursor.getColumnIndex("value"));
+        String description = cursor.getString(cursor.getColumnIndex("name"));
 
         int scr;
         if(description.equals("VERY_UNLIKELY") ) {
