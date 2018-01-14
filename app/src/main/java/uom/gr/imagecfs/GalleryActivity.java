@@ -35,14 +35,24 @@ public class GalleryActivity extends AppCompatActivity {
         myImageAdapter = new ImageAdapter(this);
         gridview.setAdapter(myImageAdapter);
         //myImageAdapter.addArray(getImages());
+        String text = (String) (String) getIntent().getSerializableExtra("text");
 
-        Cursor cursor = getContentResolver().query(ImageEntry.ImageTable.CONTENT_URI, new String[]{ImageEntry.ImageTable.COLUMN_URI}, null, null, null);
+        Cursor cursor;
+        if (text.equals("all")){
+            cursor = getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, new String[]{"DISTINCT "+ImageEntry.LabelTable.COLUMN_ID}, ImageEntry.LabelTable.COLUMN_DESCRIPTION+" != '"+text+"'", null, null);
+            Log.i("text",text);
+
+        }else{
+            cursor = getContentResolver().query(ImageEntry.LabelTable.CONTENT_URI, new String[]{" DISTINCT "+ImageEntry.LabelTable.COLUMN_ID} , ImageEntry.LabelTable.COLUMN_DESCRIPTION+" = '"+text+"'", null, null);
+
+        }
+
         cursor.moveToFirst();
 
         for(int i=0;i<cursor.getCount();i++) {
             if (cursor.getCount() > 0) {
-                Log.e("aaaxxxaa",Uri.parse(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_URI)))+" getCount "+cursor.getCount() );
-                myImageAdapter.add(cursor.getString(cursor.getColumnIndex(ImageEntry.ImageTable.COLUMN_URI)));
+                Log.e("aaaxxxaa",Uri.parse(cursor.getString(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_ID)))+" getCount "+cursor.getCount() );
+                myImageAdapter.add(cursor.getString(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_ID)));
                 cursor.moveToNext();
             }
         }

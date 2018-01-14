@@ -13,4 +13,5 @@
 
     <color name="fab1">#887CAF</color>
     <color name="fab2">#887CAF</color>
+    <color name="fabF">#000000</color>
 </resources>

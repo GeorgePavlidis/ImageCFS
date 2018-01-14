@@ -17,6 +17,7 @@
             android:transitionName="fab"
             android:id="@+id/fabMain"
             app:backgroundTint="@color/fab1"
+            android:tint="@color/fabF"
             />
 
         <android.support.design.widget.FloatingActionButton
@@ -30,6 +31,7 @@
         android:elevation="6dp"
         android:id="@+id/fab_camera"
         app:backgroundTint="@color/fab2"
+            android:tint="@color/fabF"
         android:visibility="invisible"
             />
 
@@ -45,6 +47,7 @@
         android:src="@drawable/ic_gallery"
         android:elevation="6dp"
         android:id="@+id/fab_gallery"
+            android:tint="@color/fabF"
         app:backgroundTint="@color/fab2"
         android:visibility="invisible"
             />

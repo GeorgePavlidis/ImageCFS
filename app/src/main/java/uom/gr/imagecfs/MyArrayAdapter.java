@@ -144,19 +144,21 @@ public class MyArrayAdapter extends CursorAdapter {
         // Read Description from cursor
         String description = cursor.getString(cursor.getColumnIndex("name"));
 
+        String value = cursor.getString(cursor.getColumnIndex("value"));
+
         int scr;
-        if(description.equals("VERY_UNLIKELY") ) {
+        if(value.equals("VERY_UNLIKELY") ) {
             scr=0;
-        }else if(description.equals("UNLIKELY")) {
+        }else if(value.equals("UNLIKELY")) {
             scr=25;
 
-        }else if(description.equals("POSSIBLE") ){
+        }else if(value.equals("POSSIBLE") ){
            scr=50;
 
-        }else if(description.equals("LIKELY")) {
+        }else if(value.equals("LIKELY")) {
            scr=75;
 
-        }else if(description.equals("VERY_LIKELY")) {
+        }else if(value.equals("VERY_LIKELY")) {
            scr=100;
 
         }else {
@@ -190,7 +192,6 @@ public class MyArrayAdapter extends CursorAdapter {
 
         // Read Description from cursor
         String description = cursor.getString(cursor.getColumnIndex(ImageEntry.LabelTable.COLUMN_DESCRIPTION));
-        Log.e("text.COLUMN_DESCRIPTION", description);
         // Find TextView and set formatted date on it
         viewHolder.description_txt.setText(description);
     }

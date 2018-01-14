@@ -21,8 +21,8 @@
         android:id="@+id/search2"
         android:icon="@drawable/search"
         android:orderInCategory="100"
-        android:title="Settings"
-        app:showAsAction="ifRoom|collapseActionView" />
+        android:title="Search"
+        app:showAsAction="always" />
 
 
 </menu>

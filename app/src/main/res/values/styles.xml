@@ -14,6 +14,8 @@
     <item name="windowNoTitle">true</item>
 </style>
 
+
+
     <style name="App">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

@@ -10,15 +10,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,7 +57,6 @@ public class StartActivity extends AppCompatActivity {
     AnimationDrawable loading_anim;
 
     ImageView imageView;
-    ImageView background;
     TextView text;
     Boolean flag=false;
     Boolean isOpen = false;
@@ -111,12 +113,12 @@ public class StartActivity extends AppCompatActivity {
         });
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
-        searchView.setEllipsize(true);
+      //  searchView.setEllipsize(true);
         searchView.setVoiceSearch(false);
         searchView.setCursorDrawable(R.drawable.color_cursor_white);
 
@@ -124,8 +126,10 @@ public class StartActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Snackbar.make(findViewById(R.id.startFragment), "Query: " + query, Snackbar.LENGTH_LONG)
-                        .show();
+                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
+                sca.putExtra("text",query);
+
+                startActivity(sca);
                 return false;
             }
 
@@ -139,7 +143,7 @@ public class StartActivity extends AppCompatActivity {
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
-                //Do some magic
+                searchView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -201,6 +205,7 @@ public class StartActivity extends AppCompatActivity {
 
 
         if (resultCode == RESULT_OK) {
+
             imageUri = data.getData();
             try {
 
@@ -271,7 +276,7 @@ public class StartActivity extends AppCompatActivity {
         final boolean[] run = {true};
        final ArrayList<String> saved = getSavedImages();
 
-       final int max = 6;//list.size();
+       final int max = list.size();
 
 
 
@@ -285,7 +290,7 @@ public class StartActivity extends AppCompatActivity {
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setMessage("scan the gallery..");
-        dialog.setMax(6);
+        dialog.setMax(max);
         dialog.setProgress(0);
         dialog.setCancelable(false);
 
@@ -496,9 +501,7 @@ public class StartActivity extends AppCompatActivity {
 
                 return true;
             case R.id.search2:
-                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
 
-                startActivity(sca);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
