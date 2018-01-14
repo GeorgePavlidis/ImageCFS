@@ -496,9 +496,9 @@ public class StartActivity extends AppCompatActivity {
 
                 return true;
             case R.id.search2:
-//                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
-//
-//                startActivity(sca);
+                Intent sca = new Intent(StartActivity.this,GalleryActivity.class);
+
+                startActivity(sca);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

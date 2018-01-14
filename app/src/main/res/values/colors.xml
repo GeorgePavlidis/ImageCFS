@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#037fac</color>
-    <color name="theme_primary">#2196F3</color>
+    <color name="colorPrimary">#887CAF</color>
+    <color name="colorPrimaryDark">#4f407e</color>
+    <color name="colorAccent">#887CAF</color>
+    <color name="theme_primary">#615192</color>
 
 
     <color name="colorTab">#ffffff</color>
+    <color name="splash_screen">#f4f4f4</color>
 
-    <color name="fab1">#3F51B5</color>
-    <color name="fab2">#303F9F</color>
+    <color name="start">#f4f4f4</color>
+
+    <color name="fab1">#887CAF</color>
+    <color name="fab2">#887CAF</color>
 </resources>

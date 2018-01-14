@@ -290,14 +290,16 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
         if (logos != null) {
             imageValues.put(ImageEntry.ImageTable.COLUMN_LOGO_ID, 1);
 
+            for (EntityAnnotation logo : logos) {
 
-            ContentValues values = new ContentValues();
+                ContentValues values = new ContentValues();
 
-            values.put(ImageEntry.LogosTable.COLUMN_ID,imageUri.toString());
-            values.put(ImageEntry.LogosTable.COLUMN_SCORE,logos.get(0).getScore());
-            values.put(ImageEntry.LogosTable.COLUMN_DESCRIPTION,logos.get(0).getDescription());
+                values.put(ImageEntry.LogosTable.COLUMN_ID, imageUri.toString());
+                values.put(ImageEntry.LogosTable.COLUMN_SCORE, logo.getScore());
+                values.put(ImageEntry.LogosTable.COLUMN_DESCRIPTION, logo.getDescription());
 
-            mContext.getContentResolver().insert(ImageEntry.LogosTable.CONTENT_URI,values);
+                mContext.getContentResolver().insert(ImageEntry.LogosTable.CONTENT_URI, values);
+            }
 
         }
 
@@ -308,16 +310,18 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
         if (text != null) {
             imageValues.put(ImageEntry.ImageTable.COLUMN_TEXT_ID, 1);
 
-            for (EntityAnnotation label : text) {
+
                 ContentValues values = new ContentValues();
 
                 values.put(ImageEntry.TextTable.COLUMN_ID,imageUri.toString());
-                values.put(ImageEntry.TextTable.COLUMN_DESCRIPTION,label.getDescription());
+                values.put(ImageEntry.TextTable.COLUMN_DESCRIPTION,text.get(0).getDescription());
 
                 mContext.getContentResolver().insert(ImageEntry.TextTable.CONTENT_URI,values);
 
-            }
+
         }
+
+
 
 
         // convert the safe to string

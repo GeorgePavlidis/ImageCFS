@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/startFragment"
+    android:background="@color/start"
     tools:context="uom.gr.imagecfs.StartActivity">
     <!--android:paddingBottom="@dimen/activity_horizontal_margin"-->
     <!--android:paddingLeft="@dimen/fab_margin_right"-->
