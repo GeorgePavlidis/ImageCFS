@@ -48,7 +48,6 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
     private final boolean onlyScan;
     private static final int PICK_IMAGE = 100;
     public static final String FILE_NAME = "temp.jpg";
-    private static final String CLOUD_VISION_API_KEY = "AIzaSyCRZqKBmSkyl_sGNQh2eM6uLX1ISVmyov0";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
     private static final String TAG = FetchResponseTask.class.getSimpleName();
@@ -82,7 +81,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
                     JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
                     VisionRequestInitializer requestInitializer =
-                            new VisionRequestInitializer(CLOUD_VISION_API_KEY) {
+                            new VisionRequestInitializer(BuildConfig.CLOUD_VISION_API_KEY) {
 
 
                                 @Override
