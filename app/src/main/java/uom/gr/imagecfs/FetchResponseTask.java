@@ -58,6 +58,7 @@ class FetchResponseTask extends AsyncTask<Bitmap, Void, String> {
         this.imageUri = imageUri;
     }
 
+
             @Override
             protected String doInBackground(final Bitmap...params) {
                 bitmap=params[0];
